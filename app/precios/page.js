@@ -2,6 +2,10 @@
 import Link from 'next/link';
 
 export default function Precios() {
+  // Número de WhatsApp y Correo para facilitar cambios futuros
+  const whatsappNumber = "524428367327";
+  const email = "gamalieldiaz04@gmail.com";
+
   return (
     <div className="bg-gray-900 text-white font-sans min-h-screen">
       {/* Navbar Simple */}
@@ -41,7 +45,13 @@ export default function Precios() {
               <li className="flex gap-2">✓ <span>Alta y optimización básica en Google Maps</span></li>
               <li className="flex gap-2 text-gray-400 text-xs italic ml-5">*Incluye 1 actualización de contenido al mes (Textos/Imágenes).</li>
             </ul>
-            <button className="border border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white py-3 rounded-full font-bold transition">Solicitar Plan</button>
+            <a 
+              href={`https://wa.me/${whatsappNumber}?text=Hola,%20me%20interesa%20solicitar%20el%20Plan%20Presencia%20Digital`}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-center block border border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white py-3 rounded-full font-bold transition">
+              Solicitar Plan
+            </a>
           </div>
 
           {/* Plan 2: Gestión Digital */}
@@ -65,13 +75,18 @@ export default function Precios() {
 
             <ul className="mb-8 space-y-4 flex-1 text-gray-200 text-sm">
               <li className="flex gap-2 font-bold text-blue-300">✓ Incluye Presencia Digital, además:</li>
-              <li className="flex gap-2">✓ <span>Panel Administrativo Privado</span></li>
-              <li className="flex gap-2">✓ <span>Control de clientes, pagos y vencimientos</span></li>
-              <li className="flex gap-2">✓ <span>Base de datos segura en la nube</span></li>
+              {/* PUNTO AGRUPADO PARA EVITAR CONFUSIONES */}
+              <li className="flex gap-2">✓ <span><strong>Panel Administrativo Privado:</strong> Control de clientes, pagos y vencimientos con base de datos segura en la nube.</span></li>
               <li className="flex gap-2">✓ <span>Módulos a la medida (Ej. Inventario/Citas) disponibles desde $1,000 MXN extra.</span></li>
               <li className="flex gap-2 text-gray-400 text-xs italic ml-5">*Las actualizaciones mensuales incluidas aplican solo a la Landing Page, no a la estructura del sistema.</li>
             </ul>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-full font-bold transition shadow-lg shadow-blue-600/30">Agendar Demo</button>
+            <a 
+              href={`https://wa.me/${whatsappNumber}?text=Hola,%20me%20gustaría%20agendar%20una%20Demo%20del%20Plan%20Gestión%20Digital`}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-center block bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-full font-bold transition shadow-lg shadow-blue-600/30">
+              Agendar Demo
+            </a>
           </div>
 
           {/* Plan 3: Sistema Personalizado */}
@@ -96,7 +111,12 @@ export default function Precios() {
               <li className="flex gap-2">✓ <span>Automatización de flujos de trabajo (Correos/Recordatorios)</span></li>
               <li className="flex gap-2">✓ <span>Soporte técnico prioritario y capacitación de personal</span></li>
             </ul>
-            <button className="border border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white py-3 rounded-full font-bold transition">Cotizar Proyecto</button>
+            {/* Aquí te sugiero usar el correo, ya que proyectos de $5k+ requieren una cotización más formal */}
+            <a 
+              href={`mailto:${email}?subject=Cotización%20de%20Sistema%20Personalizado&body=Hola,%20me%20interesa%20cotizar%20un%20proyecto%20a%20la%20medida%20para%20mi%20negocio.`}
+              className="text-center block border border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white py-3 rounded-full font-bold transition">
+              Cotizar Proyecto
+            </a>
           </div>
 
         </div>

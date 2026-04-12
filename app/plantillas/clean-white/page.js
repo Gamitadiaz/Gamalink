@@ -8,7 +8,7 @@ const NEGOCIO = {
   tipo:         "Estética & Bienestar",
   slogan:       "Belleza que habla por sí sola",
   descripcion:  "Un espacio dedicado a realzar tu mejor versión. Servicios profesionales en un ambiente tranquilo y sofisticado.",
-  whatsapp:     "524421000000",
+  whatsapp:     "52442836727",
   instagram:    "studioblanc",
   telefono:     "442 100 0000",
   direccion:    "Av. Constituyentes 88, Querétaro",

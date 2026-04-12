@@ -8,7 +8,7 @@ const NEGOCIO = {
   tipo:         "Barbería de Autor",
   slogan:       "El corte perfecto no es casualidad",
   descripcion:  "Tradición barbera con técnica contemporánea. Cada servicio es una experiencia, cada corte una obra.",
-  whatsapp:     "524421000000",
+  whatsapp:     "4428367627",
   instagram:    "lanajabarber",
   direccion:    "Andador Hidalgo 14, Centro, Querétaro",
   maps_embed:   "https://maps.google.com/maps?q=queretaro&output=embed",

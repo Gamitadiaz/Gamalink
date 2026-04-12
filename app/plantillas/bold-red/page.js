@@ -8,7 +8,7 @@ const NEGOCIO = {
   tipo:         "Tacos & Antojitos",
   slogan:       "El sabor que no se olvida",
   descripcion:  "Desde 1998 sirviendo los mejores tacos al pastor, birria y antojitos del barrio. Sazón de abuela, trato de familia.",
-  whatsapp:     "524421000000",
+  whatsapp:     "524428367627",
   facebook:     "taqueriaelpadrino",
   telefono:     "442 200 0000",
   direccion:    "Calle Corregidora 22, El Pueblito, Qro.",

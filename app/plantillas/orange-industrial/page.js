@@ -11,7 +11,7 @@ const NEGOCIO = {
   slogan:      "Fuerza Bruta.",
   slogan2:     "Cero Excusas.",
   descripcion: "Equipamiento de alto rendimiento, peso libre y el mejor ambiente de entrenamiento en una nave industrial diseñada para forjar resultados.",
-  whatsapp:    "524421000000",
+  whatsapp:    "524428367627",
   direccion:   "Francisco I. Madero Nte. 186, 76950 Huimilpan, Qro.",
   maps_embed:  "https://maps.google.com/maps?q=Huimilpan+Queretaro&output=embed",
   horarios: [
