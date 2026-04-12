@@ -1,26 +1,198 @@
 @import "tailwindcss";
 
+/* ─── Tema Claro: lila suave ────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg:         #f0eefa;
+  --bg-card:    #e8e5f5;
+  --bg-surface: #ddd9f0;
+  --bg-header:  #d4d0eb;
+  --primary:    #5a67c5;
+  --primary-hv: #4a57b5;
+  --primary-fg: #ffffff;
+  --fg:         #1e1b4b;
+  --fg-muted:   #4c4882;
+  --fg-subtle:  #7b77b0;
+  --border:     #c8c4e0;
+  --accent:     #7686f0;
+  --badge-bg:   #d4d0f8;
+  --badge-fg:   #3730a3;
+  --green:      #059669; 
+  --green-bg:   #d1fae5;
+  --sidebar-bg: var(--bg-card);
+  --sidebar-fg: var(--fg);
+  --sidebar-muted: var(--fg-muted);
+  --sidebar-border: var(--border);
+  --shadow:     rgba(90, 103, 197, 0.15);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ─── Tema Oscuro: paleta de la imagen ──────────────────────────────────────── */
+/*  #1a1733  #312e6b  #6b6799  #9e9bbf  #dfe0ef                                 */
+.dark {
+  --bg:         #1a1733;
+  --bg-card:    #221e42;
+  --bg-surface: #2d2a58;
+  --bg-header:  #312e6b;
+  --primary:    #7686f0;
+  --primary-hv: #8a98f5;
+  --primary-fg: #ffffff;
+  --fg:         #dfe0ef;
+  --fg-muted:   #9e9bbf;
+  --fg-subtle:  #6b6799;
+  --border:     #3d3a72;
+  --accent:     #96a8f7;
+  --badge-bg:   #312e6b;
+  --badge-fg:   #c4beff;
+  --green:      #10b981;
+  --sidebar-bg: var(--bg-card);
+  --sidebar-fg: var(--fg);
+  --sidebar-muted: var(--fg-muted);
+  --sidebar-border: var(--border);
+  --green-bg:   color-mix(in srgb, #10b981 15%, transparent);
+  --shadow:     rgba(118, 134, 240, 0.2);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+
+/* ─── Base ───────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+body { background-color: var(--bg); color: var(--fg); }
+
+/* ─── Clases temáticas ──────────────────────────────────────────────────────── */
+.t-bg      { background-color: var(--bg) !important; }
+.t-card    { background-color: var(--bg-card) !important; }
+.t-surface { background-color: var(--bg-surface) !important; }
+.t-header  { background-color: var(--bg-header) !important; }
+.t-border  { border-color: var(--border) !important; }
+.t-text    { color: var(--fg) !important; }
+.t-muted   { color: var(--fg-muted) !important; }
+.t-subtle  { color: var(--fg-subtle) !important; }
+.t-primary { color: var(--primary) !important; }
+.t-accent  { color: var(--accent) !important; }
+.t-hover:hover { background-color: var(--bg-surface) !important; }
+
+.t-badge {
+  background-color: var(--badge-bg);
+  color: var(--badge-fg);
+  font-weight: 700;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.4rem;
+  display: inline-block;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.t-btn {
+  background-color: var(--primary);
+  color: var(--primary-fg);
+  font-weight: 700;
+  border-radius: 0.75rem;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.15s, box-shadow 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
 }
+.t-btn:hover    { background-color: var(--primary-hv); box-shadow: 0 4px 12px var(--shadow); }
+.t-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.t-input {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  border-radius: 0.75rem;
+  padding: 0.8rem 1.8rem;
+  font-size: 0.875rem;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.t-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 25%, transparent);
+}
+.t-input::placeholder { color: var(--fg-subtle); }
+
+.t-nav-active {
+  background-color: var(--primary) !important;
+  color: var(--primary-fg) !important;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+.t-nav-inactive {
+  color: var(--fg-muted);
+}
+.t-nav-inactive:hover {
+  background-color: var(--bg-surface) !important;
+  color: var(--fg) !important;
+}
+
+.t-cancel-btn {
+  border: 1px solid var(--border);
+  color: var(--fg-muted);
+  font-weight: 700;
+  border-radius: 0.75rem;
+  padding: 0.625rem 1rem;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.t-cancel-btn:hover { background-color: var(--bg-surface); }
+
+
+/* ─── Tema Azul: Corporativo ────────────────────────────────────────────────── */
+.blue {
+  --bg:         #f0f9ff;
+  --bg-card:    #ffffff;
+  --bg-surface: #e0f2fe;
+  --bg-header:  #bae6fd;
+  --primary:    #2563eb;
+  --primary-hv: #1d4ed8;
+  --primary-fg: #ffffff;
+  --fg:         #0f172a;
+  --fg-muted:   #334155;
+  --fg-subtle:  #64748b;
+  --border:     #bfdbfe;
+  --accent:     #1e3a8a;
+  --badge-bg:   #dbeafe;
+  --badge-fg:   #1e40af;
+  --green:      #166534;
+  --green-bg:   #bbf7d0;
+  --sidebar-bg: var(--bg-card);
+  --sidebar-fg: var(--fg);
+  --sidebar-muted: var(--fg-muted);
+  --sidebar-border: var(--border);
+  --shadow:     rgba(37, 99, 235, 0.15);
+}
+
+/* ─── Tema SaaS: Corporate Híbrido (Sidebar Dark / Main Light) ─── */
+.saas {
+  --bg:         #f3f4f6; /* bg-gray-100 */
+  --bg-card:    #ffffff; /* bg-white */
+  --bg-surface: #f9fafb; /* bg-gray-50 */
+  --bg-header:  #ffffff;
+  --primary:    #2563eb; /* blue-600 */
+  --primary-hv: #1d4ed8;
+  --primary-fg: #ffffff;
+  --fg:         #1f2937; /* gray-800 */
+  --fg-muted:   #6b7280; /* gray-500 */
+  --fg-subtle:  #9ca3af; /* gray-400 */
+  --border:     #f3f4f6; /* border-gray-100 */
+  --accent:     #f97316; /* orange-500 */
+  --badge-bg:   #dbeafe; 
+  --badge-fg:   #1e40af; 
+  --green:      #16a34a; /* green-600 */
+  --green-bg:   #dcfce7; /* green-100 */
+  --shadow:     rgba(0, 0, 0, 0.04);
+
+  /* Variables exclusivas que hacen oscura la barra lateral */
+  --sidebar-bg: #111827; /* gray-900 */
+  --sidebar-fg: #ffffff; /* text-white */
+  --sidebar-muted: #9ca3af; /* gray-400 */
+  --sidebar-border: #1f2937; /* gray-800 */
+}
+
+.t-sidebar { background-color: var(--sidebar-bg) !important; border-color: var(--sidebar-border) !important; }
+.t-sidebar-text { color: var(--sidebar-fg) !important; }
+.t-sidebar-muted { color: var(--sidebar-muted) !important; }
+.t-sidebar-nav-inactive { color: var(--sidebar-muted); }
+.t-sidebar-nav-inactive:hover { background-color: color-mix(in srgb, var(--sidebar-fg) 10%, transparent) !important; color: var(--sidebar-fg) !important; }

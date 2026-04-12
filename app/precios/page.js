@@ -35,7 +35,7 @@ export default function Precios() {
             
             <div className="mb-6 text-blue-400">
               <p className="text-sm uppercase tracking-widest font-bold mb-1">Suscripción Mensual</p>
-              <p className="text-4xl font-extrabold">$350 <span className="text-lg font-normal text-gray-400">/mes</span></p>
+              <p className="text-4xl font-extrabold">$400 <span className="text-lg font-normal text-gray-400">/mes</span></p>
             </div>
 
             <ul className="mb-8 space-y-4 flex-1 text-gray-300 text-sm">
@@ -70,7 +70,7 @@ export default function Precios() {
             
             <div className="mb-6">
               <p className="text-sm text-blue-300 uppercase tracking-widest font-bold mb-1">Uso de Plataforma</p>
-              <p className="text-4xl font-extrabold text-white">$750 <span className="text-lg font-normal text-gray-300">/mes</span></p>
+              <p className="text-4xl font-extrabold text-white">$890 <span className="text-lg font-normal text-gray-300">/mes</span></p>
             </div>
 
             <ul className="mb-8 space-y-4 flex-1 text-gray-200 text-sm">
