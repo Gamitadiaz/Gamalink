@@ -3,12 +3,14 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Dominio verificado en tu cuenta Resend
-// Cambia esto por tu dominio real una vez que lo verifiques en resend.com/domains
-const FROM_DOMAIN = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
+const FROM_DOMAIN = process.env.RESEND_FROM_EMAIL;
 
 export async function POST(req: NextRequest) {
   try {
+    if (!FROM_DOMAIN) {
+      return NextResponse.json({ error: 'RESEND_FROM_EMAIL no está configurado en las variables de entorno.' }, { status: 500 });
+    }
+
     const body = await req.json();
     const { tipo, cliente, config } = body;
 
@@ -78,7 +80,7 @@ export async function POST(req: NextRequest) {
             <!-- Footer -->
             <div style="padding:20px 40px; background:#f9fafb; border-top:1px solid #f3f4f6; text-align:center;">
               <p style="color:#d1d5db; font-size:12px; margin:0;">
-                Este correo fue enviado por ${nombreNegocio} · Powered by PanelPro
+                Este correo fue enviado por ${nombreNegocio} · Powered by Gamalink
               </p>
             </div>
           </div>
@@ -133,7 +135,7 @@ export async function POST(req: NextRequest) {
             <!-- Footer -->
             <div style="padding:20px 40px; background:#f9fafb; border-top:1px solid #f3f4f6; text-align:center;">
               <p style="color:#d1d5db; font-size:12px; margin:0;">
-                Este correo fue enviado por ${nombreNegocio} · Powered by PanelPro
+                Este correo fue enviado por ${nombreNegocio} · Powered by Gamalink
               </p>
             </div>
           </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useTheme } from 'next-themes'
+import { useTheme, type Theme } from '@/app/providers'
 import { useEffect, useState } from 'react'
 
 export default function ConfigThemeSelector() {
@@ -10,7 +10,7 @@ export default function ConfigThemeSelector() {
   useEffect(() => setMounted(true), [])
   if (!mounted) return null
 
-  const temas = [
+  const temas: { id: Theme; nombre: string; icon: string; desc: string }[] = [
     { id: 'light', nombre: 'Lila Claro', icon: '🟣', desc: 'Identidad original Gamalink' },
     { id: 'dark',  nombre: 'Lila Oscura', icon: '🌙', desc: 'Alto contraste para la noche' },
     { id: 'blue',  nombre: 'Azul Corp', icon: '🔵', desc: 'Estilo profesional clásico' },

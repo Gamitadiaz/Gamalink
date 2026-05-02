@@ -1,6 +1,6 @@
 'use client'
 
-import { useTheme } from 'next-themes'
+import { useTheme } from '@/app/providers'
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme()

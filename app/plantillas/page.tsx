@@ -66,7 +66,7 @@ export default function PlantillasIndex() {
       <div className="border-b border-[#b5c4fb] bg-[#e0e7ff] px-6 py-12 text-center shadow-sm">
         <p className="text-sm font-bold uppercase tracking-widest mb-3 text-[#404a9d]">Gamalink · Catálogo</p>
         <h1 className="text-4xl md:text-5xl font-black text-[#404a9d]">Elige tu Presencia Digital</h1>
-        <p className="text-base mt-4 text-[#5a67c5] max-w-xl mx-auto">Selecciona un diseño base y nosotros lo adaptamos a tu negocio.</p>
+        <p className="text-base mt-4 text-[#5a67c5] max-w-xl mx-auto">Estas son nuestras plantillas, elige la que mejor te represente y nosotros lo adaptamos a tu negocio.</p>
       </div>
 
       {/* Grid de Plantillas - Respetando tu estilo original */}

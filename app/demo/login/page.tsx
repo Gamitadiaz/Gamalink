@@ -22,7 +22,7 @@ export default function LoginAdmin() {
       setError('Correo o contraseña incorrectos. Intenta de nuevo.');
       setLoading(false);
     } else {
-      router.push('/demo_admin');
+      router.push('/demo');
     }
   };
 
