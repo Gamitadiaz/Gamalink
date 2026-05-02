@@ -419,7 +419,7 @@ export default function DemoAdmin() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) router.push('/login'); else cargarDatos();
+      if (!session) router.push('/demo/login'); else cargarDatos();
     });
   }, [cargarDatos, router]);
 
