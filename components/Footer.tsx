@@ -24,7 +24,7 @@ export default function Footer() {
           </a>
           <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition text-[#96a8f7]">
             <WhatsAppIcon className="w-5 h-5" />
-            +52 442 836 7627
+            +52 442 154 8842
           </a>
         </div>
       </div>

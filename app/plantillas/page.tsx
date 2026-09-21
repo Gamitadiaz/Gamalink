@@ -97,7 +97,7 @@ export default function PlantillasIndex() {
                   Ver Demo →
                 </Link>
                 <a 
-                  href={`https://wa.me/524428367627?text=Hola%20Gamalink,%20me%20interesa%20la%20plantilla%20${p.nombre}`} 
+                  href={`https://wa.me/524421548842?text=Hola%20Gamalink,%20me%20interesa%20la%20plantilla%20${p.nombre}`} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className={`text-xs font-bold uppercase tracking-widest ${p.textColor} hover:underline`}
@@ -119,7 +119,7 @@ export default function PlantillasIndex() {
 
       {/* WhatsApp Flotante */}
       <a 
-        href="https://wa.me/524428367627" 
+        href="https://wa.me/524421548842" 
         target="_blank" 
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform z-50"
