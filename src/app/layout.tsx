@@ -1,5 +1,4 @@
 import './globals.css'
-import Script from 'next/script'
 import { Providers } from './providers'
 
 export const metadata = {
@@ -12,12 +11,10 @@ const THEME_INIT = `(function(){try{var t=localStorage.getItem('theme')||'light'
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+      </head>
       <body suppressHydrationWarning>
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: THEME_INIT }}
-        />
         <Providers>
           {children}
         </Providers>

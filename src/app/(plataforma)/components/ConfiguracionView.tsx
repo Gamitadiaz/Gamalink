@@ -2,7 +2,7 @@
 import { Config, Plan } from '@/types/demo';
 import { formatMoneda } from '@/lib/demo-utils';
 import Toggle from './Toggle';
-import ConfigThemeSelector from '@/components/ConfigThemeSelector';
+import ConfigThemeSelector from '@/app/(marketing)/components/ConfigThemeSelector';
 
 interface Props {
   configDraft: Config;

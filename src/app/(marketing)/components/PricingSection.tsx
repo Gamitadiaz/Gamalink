@@ -22,7 +22,7 @@ export default function PricingSection() {
 
             <div className="mb-6 pb-6 border-b border-slate-100">
               <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Inversión Inicial</p>
-              <div className="text-3xl font-extrabold text-slate-900">$2,000 <span className="text-lg text-slate-500 font-normal">MXN</span></div>
+              <div className="text-3xl font-extrabold text-slate-900">$2,500 <span className="text-lg text-slate-500 font-normal">MXN</span></div>
             </div>
 
             <div className="mb-6">
