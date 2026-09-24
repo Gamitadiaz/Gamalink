@@ -1,7 +1,7 @@
-import Navbar from '@/components/Navbar';
-import PricingSection from '@/components/PricingSection';
-import Footer from '@/components/Footer';
-import WhatsAppButton from '@/components/WhatsAppButton';
+import Navbar from '@/app/(marketing)/components/Navbar';
+import PricingSection from '@/app/(marketing)/components/PricingSection';
+import Footer from '@/app/(marketing)/components/Footer';
+import WhatsAppButton from '@/app/(marketing)/components/WhatsAppButton';
 
 export default function Precios() {
   return (
