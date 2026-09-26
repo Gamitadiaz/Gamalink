@@ -1,5 +1,3 @@
-import { WHATSAPP_NUMBER } from '@/lib/constants';
-
 export default function Navbar() {
   return (
     <nav className="w-full bg-white shadow-sm sticky top-0 z-50 border-b border-slate-100">
@@ -19,7 +17,7 @@ export default function Navbar() {
               Ver Plantillas
             </a>
             <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              href="https://wa.me/44222222222?text=Hola,%20quiero%20cotizar%20un%20proyecto"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white px-5 py-2 rounded-full font-medium transition-colors shadow-md bg-[#5a67c5] hover:bg-[#404a9d]"

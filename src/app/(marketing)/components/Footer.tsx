@@ -1,5 +1,4 @@
-import { MailIcon, WhatsAppIcon } from './Icons';
-import { WHATSAPP_NUMBER, CONTACT_EMAIL } from '@/lib/constants';
+import { MailIcon, WhatsAppIcon } from "./Icons";
 
 export default function Footer() {
   return (
@@ -13,16 +12,22 @@ export default function Footer() {
             <span className="font-bold text-2xl text-white tracking-tight">Gamalink</span>
           </div>
           <p className="text-slate-400 max-w-sm">
-            Transformamos la forma en que operan los negocios mediante desarrollo de software estratégico y presencia digital de alto impacto.
+            Transformamos la forma en que operan los negocios mediante desarrollo de software estratégico y presencia
+            digital de alto impacto.
           </p>
         </div>
         <div className="md:text-right flex flex-col md:items-end justify-center">
           <h4 className="text-white font-bold text-lg mb-4">Contacto Directo</h4>
-          <a href={`mailto:${CONTACT_EMAIL}`} className="flex items-center gap-2 hover:text-white transition mb-2">
+          <a href={`mailto:info@gamlalink.com}`} className="flex items-center gap-2 hover:text-white transition mb-2">
             <MailIcon className="w-5 h-5 text-[#b5c4fb]" />
-            {CONTACT_EMAIL}
+            info@gamlalink.com
           </a>
-          <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition text-[#96a8f7]">
+          <a
+            href={`https://wa.me/44222222222?text=Hola,%20quiero%20cotizar%20un%20proyecto`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 hover:text-white transition text-[#96a8f7]"
+          >
             <WhatsAppIcon className="w-5 h-5" />
             +52 442 154 8842
           </a>
