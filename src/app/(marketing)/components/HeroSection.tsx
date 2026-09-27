@@ -19,7 +19,7 @@ export default function HeroSection() {
             Ver Planes
           </a>
           <a
-            href={`https://wa.me/44222222222?text=Hola,%20quiero%20cotizar%20un%20proyecto`}
+            href={`https://wa.me/4421548842?text=Hola,%20quiero%20cotizar%20un%20proyecto`}
             target="_blank"
             rel="noopener noreferrer"
             className="bg-transparent border-2 px-8 py-3 rounded-full font-bold text-lg transition border-[#96a8f7] text-white hover:bg-white hover:text-[#404a9d]"

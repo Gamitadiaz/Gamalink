@@ -14,8 +14,8 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/lib/sb/supabase_config";
 
 const formSchema = z.object({
-  email: z.email({ message: "Please enter a valid email address." }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+  email: z.email({ message: "Por favor, ingresa un correo electrónico válido." }),
+  password: z.string().min(6, { message: "La contraseña debe tener al menos 6 caracteres." }),
   remember: z.boolean().optional(),
 });
 
@@ -58,12 +58,12 @@ export function LoginForm() {
           name="email"
           render={({ field, fieldState }) => (
             <Field className="gap-1.5" data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="login-email">Email Address</FieldLabel>
+              <FieldLabel htmlFor="login-email">Correo Electrónico</FieldLabel>
               <Input
                 {...field}
                 id="login-email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="correo@ejemplo.com"
                 autoComplete="email"
                 aria-invalid={fieldState.invalid}
               />
@@ -76,7 +76,7 @@ export function LoginForm() {
           name="password"
           render={({ field, fieldState }) => (
             <Field className="gap-1.5" data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="login-password">Password</FieldLabel>
+              <FieldLabel htmlFor="login-password">Contraseña</FieldLabel>
               <Input
                 {...field}
                 id="login-password"
@@ -103,7 +103,7 @@ export function LoginForm() {
               />
               <FieldContent>
                 <FieldLabel htmlFor="login-remember" className="font-normal">
-                  Remember me for 30 days
+                  Recuerdame por 30 días
                 </FieldLabel>
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </FieldContent>
@@ -112,7 +112,7 @@ export function LoginForm() {
         />
       </FieldGroup>
       <Button className="w-full" type="submit">
-        Login
+        Iniciar sesión
       </Button>
     </form>
   );

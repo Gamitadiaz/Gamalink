@@ -152,7 +152,7 @@ export default function PricingSection() {
             </ul>
 
             <a
-              href={`https://wa.me/44222222222?text=Hola,%20necesito%20cotizar%20un%20Sistema%20Personalizado`}
+              href={`https://wa.me/4421548842?text=Hola,%20necesito%20cotizar%20un%20Sistema%20Personalizado`}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-auto block w-full text-center font-bold py-3 rounded-xl transition border-2 border-[#5a67c5] bg-white text-[#5a67c5] hover:bg-[#5a67c5] hover:text-white"

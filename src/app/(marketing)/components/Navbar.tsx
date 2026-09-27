@@ -17,7 +17,7 @@ export default function Navbar() {
               Ver Plantillas
             </a>
             <a
-              href="https://wa.me/44222222222?text=Hola,%20quiero%20cotizar%20un%20proyecto"
+              href="https://wa.me/4421548842?text=Hola,%20quiero%20cotizar%20un%20proyecto"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white px-5 py-2 rounded-full font-medium transition-colors shadow-md bg-[#5a67c5] hover:bg-[#404a9d]"

@@ -18,6 +18,7 @@ import {
   MessageSquare,
   ReceiptText,
   Server,
+  Settings,
   ShoppingBag,
   SquareArrowUpRight,
   UserRound,
@@ -69,7 +70,7 @@ export const sidebarItems: NavGroup[] = [
     items: [
       {
         id: "default",
-        title: "Default",
+        title: "Inicio",
         url: "/dashboard/default",
         icon: LayoutDashboard,
       },
@@ -81,19 +82,19 @@ export const sidebarItems: NavGroup[] = [
       },
       {
         id: "finance",
-        title: "Finance",
+        title: "Finanzas",
         url: "/dashboard/finance",
         icon: Banknote,
       },
       {
         id: "analytics",
-        title: "Analytics",
+        title: "Analíticas",
         url: "/dashboard/analytics",
         icon: Gauge,
       },
       {
         id: "productivity",
-        title: "Productivity",
+        title: "Productividad",
         url: "/dashboard/productivity",
         icon: ListTodo,
       },
@@ -105,31 +106,31 @@ export const sidebarItems: NavGroup[] = [
       },
       {
         id: "academy",
-        title: "Academy",
+        title: "Academia",
         url: "/dashboard/academy",
         icon: GraduationCap,
       },
       {
         id: "logistics",
-        title: "Logistics",
+        title: "Logística",
         url: "/dashboard/logistics",
         icon: Forklift,
       },
       {
         id: "infrastructure",
-        title: "Infrastructure",
+        title: "Infraestructura",
         url: "/dashboard/infrastructure",
         icon: Server,
       },
       {
         id: "file-manager",
-        title: "File Manager",
+        title: "Administrador de Archivos",
         url: "/dashboard/file-manager",
         icon: FolderOpen,
       },
       {
         id: "patient-monitoring",
-        title: "Patient Monitoring",
+        title: "Monitoreo de Pacientes",
         url: "/dashboard/patient-monitoring",
         icon: HeartPulse,
       },
@@ -141,7 +142,7 @@ export const sidebarItems: NavGroup[] = [
     items: [
       {
         id: "email",
-        title: "Email",
+        title: "Correo",
         url: "/dashboard/mail",
         icon: Mail,
       },
@@ -153,7 +154,7 @@ export const sidebarItems: NavGroup[] = [
       },
       {
         id: "calendar",
-        title: "Calendar",
+        title: "Calendario",
         url: "/dashboard/calendar",
         icon: Calendar,
       },
@@ -165,25 +166,25 @@ export const sidebarItems: NavGroup[] = [
       },
       {
         id: "tasks",
-        title: "Tasks",
+        title: "Tareas",
         url: "/dashboard/tasks",
         icon: CheckSquare,
       },
       {
         id: "invoice",
-        title: "Invoice",
+        title: "Facturación",
         url: "/dashboard/invoice",
         icon: ReceiptText,
       },
       {
         id: "profile",
-        title: "Profile",
+        title: "Perfil",
         url: "/dashboard/profile",
         icon: UserRound,
       },
       {
         id: "users",
-        title: "Users",
+        title: "Usuarios",
         url: "/dashboard/users",
         icon: Users,
       },
@@ -195,7 +196,7 @@ export const sidebarItems: NavGroup[] = [
       },
       {
         id: "authentication",
-        title: "Authentication",
+        title: "Autenticación",
         icon: Fingerprint,
         subItems: [
           { id: "auth-login-v1", title: "Login v1", url: "/auth/v1/login", newTab: true },
@@ -203,6 +204,12 @@ export const sidebarItems: NavGroup[] = [
           { id: "auth-register-v1", title: "Register v1", url: "/auth/v1/register", newTab: true },
           { id: "auth-register-v2", title: "Register v2", url: "/auth/v2/register", newTab: true },
         ],
+      },
+      {
+        id: "configuration",
+        title: "Configuración",
+        url: "/dashboard/settings",
+        icon: Settings,
       },
     ],
   },

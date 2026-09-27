@@ -18,12 +18,15 @@ export default function Footer() {
         </div>
         <div className="md:text-right flex flex-col md:items-end justify-center">
           <h4 className="text-white font-bold text-lg mb-4">Contacto Directo</h4>
-          <a href={`mailto:info@gamlalink.com}`} className="flex items-center gap-2 hover:text-white transition mb-2">
+          <a
+            href={`mailto:info@gamlalink.online}`}
+            className="flex items-center gap-2 hover:text-white transition mb-2"
+          >
             <MailIcon className="w-5 h-5 text-[#b5c4fb]" />
-            info@gamlalink.com
+            info@gamlalink.online
           </a>
           <a
-            href={`https://wa.me/44222222222?text=Hola,%20quiero%20cotizar%20un%20proyecto`}
+            href={`https://wa.me/4421548842?text=Hola,%20quiero%20cotizar%20un%20proyecto`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 hover:text-white transition text-[#96a8f7]"
