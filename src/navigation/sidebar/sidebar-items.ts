@@ -93,6 +93,12 @@ export const sidebarItems: NavGroup[] = [
         icon: Gauge,
       },
       {
+        id: "landing-analytics",
+        title: "Analíticas de landing",
+        url: "/dashboard/landing-analytics",
+        icon: Gauge,
+      },
+      {
         id: "productivity",
         title: "Productividad",
         url: "/dashboard/productivity",
@@ -208,7 +214,7 @@ export const sidebarItems: NavGroup[] = [
       {
         id: "configuration",
         title: "Configuración",
-        url: "/dashboard/settings",
+        url: "/dashboard/configuration",
         icon: Settings,
       },
     ],

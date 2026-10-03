@@ -3,6 +3,22 @@ import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
 export async function proxy(request: NextRequest) {
+  const host = request.nextUrl.hostname.toLowerCase().replace(/\.$/, "");
+  const isRootHost = ["gamalink.online", "www.gamalink.online", "localhost", "127.0.0.1"].includes(host);
+  const isVercelHost = host.endsWith(".vercel.app");
+  const isReservedSubdomain = ["app.gamalink.online", "admin.gamalink.online"].includes(host);
+  const isTenantSubdomain =
+    (host.endsWith(".gamalink.online") && !isReservedSubdomain && host !== "www.gamalink.online") ||
+    host.endsWith(".localhost");
+  const isCustomDomain = !isRootHost && !isVercelHost && !isReservedSubdomain && !isTenantSubdomain;
+
+  if (isTenantSubdomain || isCustomDomain) {
+    const landingUrl = request.nextUrl.clone();
+    landingUrl.pathname = "/tenant";
+    landingUrl.searchParams.set("host", host);
+    return NextResponse.rewrite(landingUrl);
+  }
+
   let supabaseResponse = NextResponse.next({
     request: {
       headers: request.headers,

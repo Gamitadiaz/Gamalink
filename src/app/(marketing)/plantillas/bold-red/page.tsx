@@ -1,26 +1,18 @@
 "use client";
+
+import { LandingImageGallery } from "@/components/landing-image-gallery";
 import { useAnalytics } from "@/hooks/use-analytics";
+import type { LandingContentByTemplate } from "@/lib/landings/model";
 
 interface BoldRedTemplateProps {
   empresaId?: number;
-  negocio?: {
-    nombre: string;
-    tipo: string;
-    slogan: string;
-    descripcion: string;
-    whatsapp: string;
-    facebook: string;
-    telefono: string;
-    direccion: string;
-    maps_embed: string;
-    horarios: { dia: string; hora: string }[];
-    menu: { categoria: string; items: { nombre: string; precio: string }[] }[];
-  };
+  landingId?: string;
+  business?: LandingContentByTemplate["bold-red"];
 }
 // ============================================================
 // ✏️  EDITA SOLO ESTA SECCIÓN PARA CADA CLIENTE
 // ============================================================
-const NEGOCIO = {
+const DEMO_NEGOCIO: LandingContentByTemplate["bold-red"] = {
   nombre: "Taquería El Padrino",
   tipo: "Tacos & Antojitos",
   slogan: "El sabor que no se olvida",
@@ -64,14 +56,15 @@ const NEGOCIO = {
       ],
     },
   ],
+  imagenes: [],
 };
 // ============================================================
 
-export default function BoldRedTemplate({ empresaId, negocio = NEGOCIO }: BoldRedTemplateProps = {}) {
-  // El hook ahora usa el ID dinámico que le pasen
-  const { trackClick } = useAnalytics(empresaId);
+export default function BoldRedTemplate({ empresaId, landingId, business = DEMO_NEGOCIO }: BoldRedTemplateProps = {}) {
+  const NEGOCIO = business;
+  useAnalytics(empresaId, landingId);
 
-  const wa = `https://wa.me/${negocio.whatsapp}?text=Hola%20${encodeURIComponent(negocio.nombre)},%20quiero%20hacer%20un%20pedido`;
+  const wa = `https://wa.me/${NEGOCIO.whatsapp}?text=Hola%20${encodeURIComponent(NEGOCIO.nombre)},%20quiero%20hacer%20un%20pedido`;
 
   return (
     <div
@@ -177,7 +170,6 @@ export default function BoldRedTemplate({ empresaId, negocio = NEGOCIO }: BoldRe
               href={wa}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => trackClick("whatsapp_click")}
               className="flex items-center gap-2 bg-red-brand px-8 py-4 font-black font-condensed text-base text-white uppercase tracking-widest transition hover:brightness-110"
             >
               Ver Menú
@@ -196,6 +188,7 @@ export default function BoldRedTemplate({ empresaId, negocio = NEGOCIO }: BoldRe
             ))}
           </div>
         </div>
+        <LandingImageGallery images={NEGOCIO.imagenes} />
       </header>
 
       {/* ── MENÚ ── */}
