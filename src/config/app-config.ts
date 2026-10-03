@@ -8,5 +8,6 @@ export const APP_CONFIG = {
   copyright: `© ${currentYear}, Gamalink.`,
   meta: {
     title: "Gamalink: SaaS CRM Dashboard",
+    description: "Panel CRM de Gamalink para gestionar clientes, ventas y la operación de tu negocio.",
   },
 };

@@ -2,8 +2,8 @@
 import { useAnalytics } from "@/hooks/use-analytics";
 
 interface BoldRedTemplateProps {
-  empresaId: number;
-  negocio: {
+  empresaId?: number;
+  negocio?: {
     nombre: string;
     tipo: string;
     slogan: string;
@@ -67,7 +67,7 @@ const NEGOCIO = {
 };
 // ============================================================
 
-export default function BoldRedTemplate({ empresaId, negocio }: BoldRedTemplateProps) {
+export default function BoldRedTemplate({ empresaId, negocio = NEGOCIO }: BoldRedTemplateProps = {}) {
   // El hook ahora usa el ID dinámico que le pasen
   const { trackClick } = useAnalytics(empresaId);
 
