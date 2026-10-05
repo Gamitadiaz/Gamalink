@@ -89,6 +89,26 @@ $$;
 revoke all on function gamalink_internal.gl_user_belongs_to_empresa(bigint) from public, anon;
 grant execute on function gamalink_internal.gl_user_belongs_to_empresa(bigint) to authenticated;
 
+create or replace function gamalink_internal.gl_is_superadmin()
+returns boolean
+language sql
+stable
+security invoker
+set search_path = pg_catalog
+as $$
+  select (select auth.uid()) = '37830e1a-2833-4dd2-b396-c613120601aa'::uuid;
+$$;
+
+revoke all on function gamalink_internal.gl_is_superadmin() from public, anon;
+grant execute on function gamalink_internal.gl_is_superadmin() to authenticated;
+
+drop policy if exists gl_empresas_superadmin_read on public.gl_empresas;
+create policy gl_empresas_superadmin_read
+on public.gl_empresas
+for select
+to authenticated
+using (gamalink_internal.gl_is_superadmin());
+
 drop policy if exists "Ver usuarios de la misma empresa" on public.gl_usuarios;
 drop policy if exists gl_usuarios_member_read on public.gl_usuarios;
 create policy gl_usuarios_member_read
@@ -114,29 +134,44 @@ create policy gl_landings_member_read_own
 on public.gl_landings
 for select
 to authenticated
-using (gamalink_internal.gl_user_belongs_to_empresa(empresa_id));
+using (
+  gamalink_internal.gl_is_superadmin()
+  or gamalink_internal.gl_user_belongs_to_empresa(empresa_id)
+);
 
 drop policy if exists gl_landings_member_insert_own on public.gl_landings;
 create policy gl_landings_member_insert_own
 on public.gl_landings
 for insert
 to authenticated
-with check (gamalink_internal.gl_user_belongs_to_empresa(empresa_id));
+with check (
+  gamalink_internal.gl_is_superadmin()
+  or gamalink_internal.gl_user_belongs_to_empresa(empresa_id)
+);
 
 drop policy if exists gl_landings_member_update_own on public.gl_landings;
 create policy gl_landings_member_update_own
 on public.gl_landings
 for update
 to authenticated
-using (gamalink_internal.gl_user_belongs_to_empresa(empresa_id))
-with check (gamalink_internal.gl_user_belongs_to_empresa(empresa_id));
+using (
+  gamalink_internal.gl_is_superadmin()
+  or gamalink_internal.gl_user_belongs_to_empresa(empresa_id)
+)
+with check (
+  gamalink_internal.gl_is_superadmin()
+  or gamalink_internal.gl_user_belongs_to_empresa(empresa_id)
+);
 
 drop policy if exists gl_landings_member_delete_own on public.gl_landings;
 create policy gl_landings_member_delete_own
 on public.gl_landings
 for delete
 to authenticated
-using (gamalink_internal.gl_user_belongs_to_empresa(empresa_id));
+using (
+  gamalink_internal.gl_is_superadmin()
+  or gamalink_internal.gl_user_belongs_to_empresa(empresa_id)
+);
 
 -- Public tracking may only insert allowlisted events for a currently published landing.
 drop policy if exists "Permitir inserción de eventos desde el tracker" on public.gl_analytics_events;
@@ -274,7 +309,10 @@ begin
     and l.empresa_id = path_parts[1]::bigint;
 
   return landing_empresa_id is not null
-    and gamalink_internal.gl_user_belongs_to_empresa(landing_empresa_id);
+    and (
+      gamalink_internal.gl_is_superadmin()
+      or gamalink_internal.gl_user_belongs_to_empresa(landing_empresa_id)
+    );
 end;
 $$;
 

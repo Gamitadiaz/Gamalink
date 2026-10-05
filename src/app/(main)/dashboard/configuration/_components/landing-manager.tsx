@@ -17,6 +17,7 @@ import {
   type LandingTemplateKey,
   TEMPLATE_OPTIONS,
 } from "@/lib/landings/model";
+import { isSuperadminUserId } from "@/lib/landings/superadmin";
 import { supabase } from "@/lib/sb/supabase_config";
 
 import { type JsonValue, LandingContentEditor, removeAtPath, setAtPath, toJsonValue } from "./content-editor";
@@ -78,6 +79,7 @@ function getImages(value: JsonValue): string[] {
 export function LandingManager() {
   const [companies, setCompanies] = useState<CompanyOption[]>([]);
   const [companyId, setCompanyId] = useState("");
+  const [isSuperadmin, setIsSuperadmin] = useState(false);
   const [landings, setLandings] = useState<LandingRow[]>([]);
   const [selectedId, setSelectedId] = useState("");
   const [content, setContent] = useState<JsonValue>(toJsonValue(DEFAULT_LANDING_CONTENT["bold-red"]));
@@ -110,37 +112,59 @@ export function LandingManager() {
         return;
       }
 
-      const { data: memberships, error: membershipError } = await supabase
-        .from("gl_usuarios")
-        .select("empresa_id")
-        .eq("auth_id", user.id);
-      if (membershipError) {
-        setErrorMessage(`No se pudieron cargar tus empresas: ${membershipError.message}`);
-        setLoading(false);
-        return;
-      }
+      const superadmin = isSuperadminUserId(user.id);
+      setIsSuperadmin(superadmin);
 
-      const companyIds = [...new Set((memberships ?? []).map((membership) => String(membership.empresa_id)))];
-      if (companyIds.length === 0) {
-        setErrorMessage("Tu usuario no está vinculado a una empresa de Gamalink.");
-        setLoading(false);
-        return;
-      }
+      let companyRows: { id: number; nombre_negocio: string | null }[] | null = null;
+      if (superadmin) {
+        const { data, error } = await supabase.from("gl_empresas").select("id, nombre_negocio").order("nombre_negocio");
+        if (error) {
+          setErrorMessage(`No se pudieron cargar las empresas: ${error.message}`);
+          setLoading(false);
+          return;
+        }
+        companyRows = data;
+      } else {
+        const { data: memberships, error: membershipError } = await supabase
+          .from("gl_usuarios")
+          .select("empresa_id")
+          .eq("auth_id", user.id);
+        if (membershipError) {
+          setErrorMessage(`No se pudieron cargar tus empresas: ${membershipError.message}`);
+          setLoading(false);
+          return;
+        }
 
-      const { data: companyRows, error: companyError } = await supabase
-        .from("gl_empresas")
-        .select("id, nombre_negocio")
-        .in("id", companyIds);
-      if (companyError) {
-        setErrorMessage(`No se pudieron cargar los datos de tus empresas: ${companyError.message}`);
-        setLoading(false);
-        return;
+        const companyIds = [...new Set((memberships ?? []).map((membership) => String(membership.empresa_id)))];
+        if (companyIds.length === 0) {
+          setErrorMessage("Tu usuario no está vinculado a una empresa de Gamalink.");
+          setLoading(false);
+          return;
+        }
+
+        const { data, error } = await supabase.from("gl_empresas").select("id, nombre_negocio").in("id", companyIds);
+        if (error) {
+          setErrorMessage(`No se pudieron cargar los datos de tus empresas: ${error.message}`);
+          setLoading(false);
+          return;
+        }
+        companyRows = data;
       }
 
       const options = (companyRows ?? []).map((company) => ({
         id: String(company.id),
         name: company.nombre_negocio || `Empresa ${company.id}`,
       }));
+      if (options.length === 0) {
+        setErrorMessage(
+          superadmin
+            ? "Aún no hay empresas registradas para configurar."
+            : "No se encontraron los datos de tus empresas.",
+        );
+        setLoading(false);
+        return;
+      }
+
       setCompanies(options);
       setCompanyId(options[0]?.id ?? "");
       setLoading(false);
@@ -446,6 +470,12 @@ export function LandingManager() {
         </div>
       ) : null}
 
+      {isSuperadmin ? (
+        <p className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-sm">
+          Modo superadministrador: puedes administrar las landing pages de todas las empresas.
+        </p>
+      ) : null}
+
       {companies.length > 1 ? (
         <div className="max-w-sm space-y-2">
           <Label htmlFor="landing-company">Empresa</Label>
@@ -468,7 +498,9 @@ export function LandingManager() {
         <div>
           <h2 className="font-semibold text-lg">Crear landing</h2>
           <p className="text-muted-foreground text-sm">
-            Cada landing tendrá su propio subdominio y puede usar una plantilla distinta.
+            {selectedCompany
+              ? `Se creará para ${selectedCompany.name} y tendrá su propio subdominio.`
+              : "Cada landing tendrá su propio subdominio y puede usar una plantilla distinta."}
           </p>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
@@ -511,7 +543,9 @@ export function LandingManager() {
       {landings.length > 0 ? (
         <section className="space-y-4 rounded-xl border bg-card p-4 md:p-6">
           <div>
-            <h2 className="font-semibold text-lg">Tus landing pages</h2>
+            <h2 className="font-semibold text-lg">
+              {isSuperadmin && selectedCompany ? `Landing pages de ${selectedCompany.name}` : "Tus landing pages"}
+            </h2>
             <p className="text-muted-foreground text-sm">Selecciona una landing para editar su contenido.</p>
           </div>
           <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
