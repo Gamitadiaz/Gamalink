@@ -108,7 +108,7 @@ export const sidebarItems: NavGroup[] = [
       },
       {
         id: "profile",
-        title: "Perfil",
+        title: "Mi cuenta",
         url: "/dashboard/profile",
         icon: UserRound,
       },

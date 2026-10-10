@@ -1,6 +1,8 @@
 "use client";
 
-import { EllipsisVertical, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+import { CircleUser, EllipsisVertical, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -27,6 +29,7 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar();
   const signOut = useSignOut();
+  const router = useRouter();
 
   return (
     <SidebarMenu>
@@ -69,18 +72,10 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              {/* <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/dashboard/profile")}>
                 <CircleUser />
-                Account
+                Mi cuenta
               </DropdownMenuItem>
-               <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <MessageSquareDot />
-                Notifications
-              </DropdownMenuItem>*/}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => void signOut()}>

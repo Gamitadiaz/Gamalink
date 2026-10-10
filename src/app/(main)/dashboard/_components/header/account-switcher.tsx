@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 import { cn } from "cn";
-import { Check, LogOut } from "lucide-react";
+import { Check, CircleUser, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -30,6 +32,7 @@ export function AccountSwitcher({
 }) {
   const [activeUser, setActiveUser] = useState(users[0]);
   const signOut = useSignOut();
+  const router = useRouter();
 
   if (!activeUser) {
     return null;
@@ -73,18 +76,10 @@ export function AccountSwitcher({
         ))}
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          {/*<DropdownMenuItem>
-            <BadgeCheck />
-            Account
+          <DropdownMenuItem onClick={() => router.push("/dashboard/profile")}>
+            <CircleUser />
+            Mi cuenta
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <CreditCard />
-            Billing
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Bell />
-            Notifications
-          </DropdownMenuItem>*/}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => void signOut()}>

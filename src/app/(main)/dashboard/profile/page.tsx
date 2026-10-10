@@ -1,186 +1,159 @@
-import { cookies } from "next/headers";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
-import { createServerClient } from "@supabase/ssr";
-import { LockKeyhole } from "lucide-react";
+import { Building2, MessageCircle } from "lucide-react";
 import type { Metadata } from "next";
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { APP_CONFIG } from "@/config/app-config";
+import { type ServicioRow, servicioLabel } from "@/lib/empresas";
+import { formatoDinero, formatoFecha } from "@/lib/membresias";
+import { createSupabaseServerClient } from "@/lib/sb/server";
+import { getSessionContext } from "@/lib/session";
 
-import { profile as fallbackProfile, type ProfileRecord } from "./_components/profile-data";
-import { ProfileDocuments } from "./_components/profile-documents";
-import { EmploymentDetails } from "./_components/profile-employment-details";
-import { ProfileHeader } from "./_components/profile-header";
-import { ProfileOverview } from "./_components/profile-overview";
-import { PersonalDetails } from "./_components/profile-personal-details";
-import { ProfileStatusSidebar } from "./_components/profile-status-sidebar";
-import { TimeOffDetails } from "./_components/profile-time-off-details";
+import { CerrarTodasLasSesiones, NombreForm, PasswordForm } from "./_components/cuenta-forms";
 
 export const metadata: Metadata = {
-  title: "Open Source Employee Profile Dashboard with shadcn/ui",
-  description:
-    "Explore an open source employee profile dashboard with personal details, employment information, time off, documents, and reporting lines.",
-  alternates: {
-    canonical: "/dashboard/profile",
-  },
+  title: "Mi cuenta",
 };
 
-function buildProfileFromUser(
-  user: { email?: string | null; user_metadata?: Record<string, unknown> } | null,
-): ProfileRecord {
-  const metadata = (user?.user_metadata ?? {}) as Record<string, unknown>;
-  const userName =
-    (typeof metadata.full_name === "string" && metadata.full_name) ||
-    (typeof metadata.name === "string" && metadata.name) ||
-    (typeof metadata.user_name === "string" && metadata.user_name) ||
-    (user?.email ?? fallbackProfile.name);
+const ROLE_LABELS = { superadmin: "Superadministrador", dueno: "Dueño", empleado: "Empleado" } as const;
 
-  const initials =
-    userName
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((part) => part[0]?.toUpperCase() ?? "")
-      .join("") || fallbackProfile.initials;
+const ESTADO_CLASS: Record<string, string> = {
+  activo: "bg-green-500/10 text-green-700 dark:bg-green-500/15 dark:text-green-300",
+  pausado: "bg-amber-500/10 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300",
+  cancelado: "bg-muted text-muted-foreground",
+};
 
-  const avatar =
-    (typeof metadata.avatar_url === "string" && metadata.avatar_url) ||
-    (typeof metadata.picture === "string" && metadata.picture) ||
-    fallbackProfile.avatar;
-
-  return {
-    ...fallbackProfile,
-    name: userName,
-    preferredName:
-      (typeof metadata.preferred_name === "string" && metadata.preferred_name) ||
-      userName.split(" ")[0] ||
-      fallbackProfile.preferredName,
-    legalName: userName,
-    initials,
-    avatar,
-    workEmail: user?.email ?? fallbackProfile.workEmail,
-    personalEmail: user?.email ?? fallbackProfile.personalEmail,
-    updatedBy: userName,
-    updatedAt: new Date().toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    }),
-  };
+function Seccion({
+  titulo,
+  descripcion,
+  children,
+}: {
+  titulo: string;
+  descripcion?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="space-y-4 rounded-xl border bg-card p-4 md:p-6">
+      <div>
+        <h2 className="font-semibold text-lg">{titulo}</h2>
+        {descripcion ? <p className="text-muted-foreground text-sm">{descripcion}</p> : null}
+      </div>
+      {children}
+    </section>
+  );
 }
 
-export default async function Page() {
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || "https://example.supabase.co",
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "example-anon-key",
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        // Los Server Components no pueden escribir cookies; el proxy ya refresca la sesión.
-        setAll: () => {
-          /* no-op */
-        },
-      },
-    },
-  );
+export default async function MiCuentaPage() {
+  const session = await getSessionContext();
+  if (!session) redirect("/login");
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const profile = buildProfileFromUser(user);
+  const { user, role, empresas } = session;
+  const metadata = user.user_metadata as Record<string, unknown>;
+  const supabase = await createSupabaseServerClient();
+
+  const [{ data: fila }, { data: serviciosData }] = await Promise.all([
+    supabase.from("gl_usuarios").select("nombre").eq("auth_id", user.id).maybeSingle(),
+    empresas.length > 0
+      ? supabase
+          .from("gl_empresa_servicios")
+          .select("empresa_id, servicio, estado, precio_mensual, fecha_vencimiento")
+          .in(
+            "empresa_id",
+            empresas.map((empresa) => empresa.id),
+          )
+          .order("servicio")
+      : Promise.resolve({ data: [] }),
+  ]);
+
+  const nombre =
+    fila?.nombre ??
+    (typeof metadata.full_name === "string" ? metadata.full_name : null) ??
+    (typeof metadata.name === "string" ? metadata.name : null) ??
+    "";
+  const servicios = (serviciosData ?? []) as (ServicioRow & { empresa_id: number })[];
 
   return (
-    <div className="flex flex-col gap-4 py-4" data-content-padding="false">
-      <Breadcrumb className="px-4">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <span>Dashboard</span>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <span>People</span>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <span>Employee directory</span>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <span>{profile.name}</span>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Profile details</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-      <ProfileHeader profile={profile} />
+    <main className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-4 md:p-6">
+      <header>
+        <h1 className="font-semibold text-2xl">Mi cuenta</h1>
+        <p className="text-muted-foreground">Tus datos de acceso a Gamalink.</p>
+      </header>
 
-      <Tabs className="min-h-0 flex-1 gap-0" defaultValue="overview">
-        <div className="scrollbar-none touch-pan-x overflow-x-auto overscroll-x-contain border-y">
-          <TabsList
-            className="w-max min-w-full justify-start gap-4 px-4 *:data-[slot=tabs-trigger]:flex-none"
-            variant="line"
-          >
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="personal">Personal</TabsTrigger>
-            <TabsTrigger value="employment">Employment</TabsTrigger>
-            <TabsTrigger value="compensation">Compensation</TabsTrigger>
-            <TabsTrigger value="time-off">Time off</TabsTrigger>
-            <TabsTrigger value="documents">Documents</TabsTrigger>
-          </TabsList>
+      <Seccion titulo="Mis datos">
+        <NombreForm nombre={nombre} />
+        <dl className="grid gap-3 text-sm sm:grid-cols-2">
+          <div>
+            <dt className="text-muted-foreground">Correo</dt>
+            <dd className="font-medium">{user.email}</dd>
+          </div>
+          <div>
+            <dt className="text-muted-foreground">Rol</dt>
+            <dd className="font-medium">{ROLE_LABELS[role]}</dd>
+          </div>
+        </dl>
+      </Seccion>
+
+      <Seccion titulo="Seguridad">
+        <PasswordForm />
+        <div className="border-t pt-4">
+          <CerrarTodasLasSesiones />
         </div>
+      </Seccion>
 
-        <div className="px-4 md:px-6">
-          <TabsContent value="overview">
-            <div className="grid lg:grid-cols-[minmax(0,1fr)_auto_18rem]">
-              <div className="py-4 lg:pr-6">
-                <ProfileOverview profile={profile} />
-              </div>
-              <Separator className="hidden lg:block" orientation="vertical" />
-              <div className="py-4 lg:pl-6">
-                <ProfileStatusSidebar profile={profile} />
-              </div>
-            </div>
-          </TabsContent>
+      {role === "superadmin" ? (
+        <Seccion descripcion="Administra a tus clientes, sus servicios y sus accesos." titulo="Gamalink">
+          <Link className={buttonVariants({ variant: "outline" })} href="/dashboard/empresas">
+            <Building2 />
+            Ir al panel de empresas
+          </Link>
+        </Seccion>
+      ) : (
+        empresas.map((empresa) => {
+          const serviciosEmpresa = servicios.filter((s) => s.empresa_id === empresa.id);
+          const mensaje = `Hola Gamalink, soy de ${empresa.nombre} y me interesa agregar un servicio.`;
 
-          <TabsContent className="py-4" value="personal">
-            <PersonalDetails profile={profile} />
-          </TabsContent>
-
-          <TabsContent className="py-4" value="employment">
-            <EmploymentDetails profile={profile} />
-          </TabsContent>
-
-          <TabsContent className="py-4" value="compensation">
-            <div className="flex items-start gap-3">
-              <LockKeyhole aria-hidden="true" className="size-4 text-muted-foreground" />
-              <div>
-                <p className="font-medium text-sm">Restricted information</p>
-                <p className="mt-0.5 text-muted-foreground text-sm">
-                  Visible to people administrators and authorized finance roles.
-                </p>
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent className="py-4" value="time-off">
-            <TimeOffDetails profile={profile} />
-          </TabsContent>
-
-          <TabsContent className="py-4" value="documents">
-            <ProfileDocuments documents={profile.documents} />
-          </TabsContent>
-        </div>
-      </Tabs>
-    </div>
+          return (
+            <Seccion
+              descripcion="Servicios que tienes contratados con Gamalink."
+              key={empresa.id}
+              titulo={empresa.nombre}
+            >
+              {serviciosEmpresa.length > 0 ? (
+                <ul className="divide-y rounded-lg border">
+                  {serviciosEmpresa.map((servicio) => (
+                    <li className="flex flex-wrap items-center justify-between gap-2 p-3" key={servicio.servicio}>
+                      <div>
+                        <p className="font-medium text-sm">{servicioLabel(servicio.servicio)}</p>
+                        <p className="text-muted-foreground text-xs">
+                          {servicio.precio_mensual !== null
+                            ? `${formatoDinero(servicio.precio_mensual)} al mes`
+                            : "Precio por definir"}
+                          {servicio.fecha_vencimiento ? ` · Vence ${formatoFecha(servicio.fecha_vencimiento)}` : ""}
+                        </p>
+                      </div>
+                      <Badge className={ESTADO_CLASS[servicio.estado]}>{servicio.estado}</Badge>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-muted-foreground text-sm">Aún no tienes servicios contratados.</p>
+              )}
+              <a
+                className={buttonVariants({ variant: "outline" })}
+                href={`https://wa.me/${APP_CONFIG.whatsapp}?text=${encodeURIComponent(mensaje)}`}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <MessageCircle />
+                ¿Quieres agregar un servicio? Escríbenos
+              </a>
+            </Seccion>
+          );
+        })
+      )}
+    </main>
   );
 }

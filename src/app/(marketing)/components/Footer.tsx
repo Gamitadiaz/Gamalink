@@ -1,3 +1,5 @@
+import { APP_CONFIG } from "@/config/app-config";
+
 import { MailIcon, WhatsAppIcon } from "./Icons";
 
 export default function Footer() {
@@ -26,7 +28,7 @@ export default function Footer() {
             info@gamlalink.online
           </a>
           <a
-            href={`https://wa.me/4421548842?text=Hola,%20quiero%20cotizar%20un%20proyecto`}
+            href={`https://wa.me/${APP_CONFIG.whatsapp}?text=Hola,%20quiero%20cotizar%20un%20proyecto`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 hover:text-white transition text-[#96a8f7]"

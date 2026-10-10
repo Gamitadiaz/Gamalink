@@ -1,3 +1,5 @@
+import { APP_CONFIG } from "@/config/app-config";
+
 export default function HeroSection() {
   return (
     <section className="relative text-white py-24 lg:py-32 overflow-hidden bg-gradient-to-br from-[#404a9d] via-[#5a67c5] to-[#7686f0]">
@@ -19,7 +21,7 @@ export default function HeroSection() {
             Ver Planes
           </a>
           <a
-            href={`https://wa.me/4421548842?text=Hola,%20quiero%20cotizar%20un%20proyecto`}
+            href={`https://wa.me/${APP_CONFIG.whatsapp}?text=Hola,%20quiero%20cotizar%20un%20proyecto`}
             target="_blank"
             rel="noopener noreferrer"
             className="bg-transparent border-2 px-8 py-3 rounded-full font-bold text-lg transition border-[#96a8f7] text-white hover:bg-white hover:text-[#404a9d]"

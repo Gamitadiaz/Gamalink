@@ -1,3 +1,5 @@
+import { APP_CONFIG } from "@/config/app-config";
+
 import { CheckIcon } from "./Icons";
 
 export default function PricingSection() {
@@ -101,7 +103,7 @@ export default function PricingSection() {
             </ul>
 
             <a
-              href={`https://wa.me/44222222222?text=Hola,%20me%20interesa%20el%20plan%20Gestión%20Digital`}
+              href={`https://wa.me/${APP_CONFIG.whatsapp}?text=Hola,%20me%20interesa%20el%20plan%20Gestión%20Digital`}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-auto block w-full bg-[#96a8f7] text-[#404a9d] text-center font-bold py-3 rounded-xl transition shadow-lg hover:bg-white hover:text-[#404a9d]"
@@ -152,7 +154,7 @@ export default function PricingSection() {
             </ul>
 
             <a
-              href={`https://wa.me/4421548842?text=Hola,%20necesito%20cotizar%20un%20Sistema%20Personalizado`}
+              href={`https://wa.me/${APP_CONFIG.whatsapp}?text=Hola,%20necesito%20cotizar%20un%20Sistema%20Personalizado`}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-auto block w-full text-center font-bold py-3 rounded-xl transition border-2 border-[#5a67c5] bg-white text-[#5a67c5] hover:bg-[#5a67c5] hover:text-white"
