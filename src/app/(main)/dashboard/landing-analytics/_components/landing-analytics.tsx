@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { isSuperadminUserId } from "@/lib/landings/superadmin";
 import { supabase } from "@/lib/sb/supabase_config";
 
 type LandingOption = { id: string; slug: string };
@@ -81,21 +82,66 @@ export function LandingAnalytics() {
     const loadLandings = async () => {
       setLoading(true);
       setErrorMessage("");
-      const { data, error } = await supabase
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (cancelled) {
+        return;
+      }
+      if (!user) {
+        setErrorMessage("Inicia sesión para ver tus analíticas.");
+        setLandings([]);
+        setLoading(false);
+        return;
+      }
+
+      // Las landings publicadas son de lectura pública (para servirlas en su dominio),
+      // así que hay que filtrar explícitamente por las empresas del usuario.
+      const superadmin = isSuperadminUserId(user.id);
+      let query = supabase
         .from("gl_landings")
-        .select("id, slug")
+        .select("id, slug, gl_empresas(nombre_negocio)")
         .order("updated_at", { ascending: false });
+
+      if (!superadmin) {
+        const { data: memberships, error: membershipError } = await supabase
+          .from("gl_usuarios")
+          .select("empresa_id")
+          .eq("auth_id", user.id);
+        if (cancelled) {
+          return;
+        }
+        const companyIds = [...new Set((memberships ?? []).map((m) => String(m.empresa_id)))];
+        if (membershipError || companyIds.length === 0) {
+          setErrorMessage(
+            membershipError
+              ? `No se pudieron cargar tus empresas: ${membershipError.message}`
+              : "Tu usuario no está vinculado a una empresa de Gamalink.",
+          );
+          setLandings([]);
+          setLoading(false);
+          return;
+        }
+        query = query.in("empresa_id", companyIds);
+      }
+
+      const { data, error } = await query;
 
       if (cancelled) {
         return;
       }
       if (error) {
-        setErrorMessage(`No se pudieron cargar las landing pages. Revisa bd.sql: ${error.message}`);
+        setErrorMessage(`No se pudieron cargar las landing pages: ${error.message}`);
         setLandings([]);
         setLoading(false);
         return;
       }
-      const options = data ?? [];
+      const options: LandingOption[] = (data ?? []).map((row) => {
+        const empresa = Array.isArray(row.gl_empresas) ? row.gl_empresas[0] : row.gl_empresas;
+        const companyName = (empresa as { nombre_negocio?: string | null } | null)?.nombre_negocio;
+        return { id: row.id, slug: superadmin && companyName ? `${companyName} · ${row.slug}` : row.slug };
+      });
       setLandings(options);
       setSelectedId((currentId) =>
         options.some((landing) => landing.id === currentId) ? currentId : (options[0]?.id ?? ""),

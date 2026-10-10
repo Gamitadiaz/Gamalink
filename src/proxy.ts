@@ -2,6 +2,8 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import { createServerClient } from "@supabase/ssr";
 
+import { isDashboardRouteAllowed, isProtectedAppRoute } from "@/lib/dashboard-access";
+
 export async function proxy(request: NextRequest) {
   const host = request.nextUrl.hostname.toLowerCase().replace(/\.$/, "");
   const isRootHost = ["gamalink.online", "www.gamalink.online", "localhost", "127.0.0.1"].includes(host);
@@ -66,6 +68,25 @@ export async function proxy(request: NextRequest) {
   if (user && (pathname.startsWith("/login") || pathname.startsWith("/register"))) {
     const dashboardUrl = new URL("/dashboard", request.url);
     return NextResponse.redirect(dashboardUrl);
+  }
+
+  if (user && isProtectedAppRoute(pathname)) {
+    // Misma fuente que el sidebar y el layout: role_slug (siempre tiene valor, por defecto 'cliente').
+    const { data: userRow } = await supabase
+      .from("gl_usuarios")
+      .select("role_slug")
+      .eq("auth_id", user.id)
+      .maybeSingle();
+
+    if (!isDashboardRouteAllowed(pathname, user.id, userRow?.role_slug ?? null)) {
+      const unauthorizedUrl = new URL("/unauthorized", request.url);
+      const redirectResponse = NextResponse.redirect(unauthorizedUrl);
+      // Conserva las cookies de sesión que Supabase haya refrescado en esta petición.
+      for (const cookie of supabaseResponse.cookies.getAll()) {
+        redirectResponse.cookies.set(cookie);
+      }
+      return redirectResponse;
+    }
   }
 
   return supabaseResponse;

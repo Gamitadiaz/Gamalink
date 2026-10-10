@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "shadcn/tailwind.css";
 
 /* Theme preset styles: these override CSS variables based on the selected data-theme-preset */
 @import "../styles/presets/brutalist.css";
@@ -54,77 +53,79 @@
 
 /* Default theme styles (used when no data-theme-preset is set or when 'default' is selected).
 These serve as the fallback; there is no separate default.css file. */
+/* Gamalink brand palette (same as /precios):
+   #404a9d (indigo dark) · #5a67c5 (primary) · #7686f0 · #96a8f7 · #b5c4fb + slate neutrals */
 :root {
   --radius: 0.625rem;
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --card: #ffffff;
+  --card-foreground: #1e293b;
+  --popover: #ffffff;
+  --popover-foreground: #1e293b;
+  --primary: #5a67c5;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #404a9d;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #eef1fe;
+  --accent-foreground: #404a9d;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #7686f0;
+  --chart-1: #404a9d;
+  --chart-2: #5a67c5;
+  --chart-3: #7686f0;
+  --chart-4: #96a8f7;
+  --chart-5: #b5c4fb;
+  --sidebar: #f8fafc;
+  --sidebar-foreground: #1e293b;
+  --sidebar-primary: #5a67c5;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eef1fe;
+  --sidebar-accent-foreground: #404a9d;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #7686f0;
 
   /* fonts */
   --font-sans: var(--font-geist);
   --font-mono: var(--font-geist-mono);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: #ffffff;
+  --foreground: #1e293b;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: #0f1222;
+  --foreground: #f1f5f9;
+  --card: #171b30;
+  --card-foreground: #f1f5f9;
+  --popover: #171b30;
+  --popover-foreground: #f1f5f9;
+  --primary: #7686f0;
+  --primary-foreground: #0f1222;
+  --secondary: #222844;
+  --secondary-foreground: #f1f5f9;
+  --muted: #222844;
+  --muted-foreground: #94a3b8;
+  --accent: #2a3160;
+  --accent-foreground: #b5c4fb;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --border: rgb(181 196 251 / 12%);
+  --input: rgb(181 196 251 / 16%);
+  --ring: #5a67c5;
+  --chart-1: #b5c4fb;
+  --chart-2: #96a8f7;
+  --chart-3: #7686f0;
+  --chart-4: #5a67c5;
+  --chart-5: #404a9d;
+  --sidebar: #13172a;
+  --sidebar-foreground: #f1f5f9;
+  --sidebar-primary: #7686f0;
+  --sidebar-primary-foreground: #0f1222;
+  --sidebar-accent: #2a3160;
+  --sidebar-accent-foreground: #b5c4fb;
+  --sidebar-border: rgb(181 196 251 / 12%);
+  --sidebar-ring: #5a67c5;
 }
 
 @layer base {

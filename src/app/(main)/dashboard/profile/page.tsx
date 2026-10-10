@@ -1,3 +1,6 @@
+import { cookies } from "next/headers";
+
+import { createServerClient } from "@supabase/ssr";
 import { LockKeyhole } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -11,7 +14,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { profile } from "./_components/profile-data";
+import { profile as fallbackProfile, type ProfileRecord } from "./_components/profile-data";
 import { ProfileDocuments } from "./_components/profile-documents";
 import { EmploymentDetails } from "./_components/profile-employment-details";
 import { ProfileHeader } from "./_components/profile-header";
@@ -29,7 +32,71 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Page() {
+function buildProfileFromUser(
+  user: { email?: string | null; user_metadata?: Record<string, unknown> } | null,
+): ProfileRecord {
+  const metadata = (user?.user_metadata ?? {}) as Record<string, unknown>;
+  const userName =
+    (typeof metadata.full_name === "string" && metadata.full_name) ||
+    (typeof metadata.name === "string" && metadata.name) ||
+    (typeof metadata.user_name === "string" && metadata.user_name) ||
+    (user?.email ?? fallbackProfile.name);
+
+  const initials =
+    userName
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() ?? "")
+      .join("") || fallbackProfile.initials;
+
+  const avatar =
+    (typeof metadata.avatar_url === "string" && metadata.avatar_url) ||
+    (typeof metadata.picture === "string" && metadata.picture) ||
+    fallbackProfile.avatar;
+
+  return {
+    ...fallbackProfile,
+    name: userName,
+    preferredName:
+      (typeof metadata.preferred_name === "string" && metadata.preferred_name) ||
+      userName.split(" ")[0] ||
+      fallbackProfile.preferredName,
+    legalName: userName,
+    initials,
+    avatar,
+    workEmail: user?.email ?? fallbackProfile.workEmail,
+    personalEmail: user?.email ?? fallbackProfile.personalEmail,
+    updatedBy: userName,
+    updatedAt: new Date().toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }),
+  };
+}
+
+export default async function Page() {
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "https://example.supabase.co",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "example-anon-key",
+    {
+      cookies: {
+        getAll: () => cookieStore.getAll(),
+        // Los Server Components no pueden escribir cookies; el proxy ya refresca la sesión.
+        setAll: () => {
+          /* no-op */
+        },
+      },
+    },
+  );
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const profile = buildProfileFromUser(user);
+
   return (
     <div className="flex flex-col gap-4 py-4" data-content-padding="false">
       <Breadcrumb className="px-4">

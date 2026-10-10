@@ -1,351 +1,176 @@
--- Propuesta de esquema para múltiples landing pages por empresa.
--- Revisar antes de ejecutar en Supabase. Este archivo no se ejecuta desde la aplicación.
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
 
-begin;
-
-create table if not exists public.gl_landings (
-  id uuid primary key default gen_random_uuid(),
-  empresa_id bigint not null references public.gl_empresas (id) on delete cascade,
-  template_key text not null check (
-    template_key in ('bold-red', 'clean-white', 'dark-purple', 'orange-industrial', 'warm-wood')
-  ),
-  slug text not null unique check (
-    slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'
-    and slug not in ('admin', 'app', 'www')
-  ),
-  custom_domain text check (
-    custom_domain is null
-    or (
-      btrim(custom_domain) <> ''
-      and custom_domain !~* '(^|\.)gamalink\.online$'
-      and custom_domain !~* '(^|\.)localhost$'
-      and custom_domain !~* '(^|\.)vercel\.app$'
-    )
-  ),
-  status text not null default 'draft' check (status in ('draft', 'published', 'archived')),
-  content jsonb not null check (
-    jsonb_typeof(content) = 'object'
-    and case
-      when jsonb_typeof(content -> 'imagenes') = 'array'
-        then jsonb_array_length(content -> 'imagenes') <= 5
-      else false
-    end
-  ),
-  published_at timestamptz,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
+CREATE TABLE public.clientes (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  nombre text,
+  telefono text,
+  estado_pago text,
+  fecha_inicio date NOT NULL,
+  plan text DEFAULT 'Mensualidad'::text,
+  fecha_vencimiento date,
+  correo text,
+  CONSTRAINT clientes_pkey PRIMARY KEY (id)
 );
-
-create index if not exists gl_landings_empresa_id_idx
-  on public.gl_landings (empresa_id);
-
-create unique index if not exists gl_landings_custom_domain_lower_unique
-  on public.gl_landings (lower(custom_domain))
-  where custom_domain is not null;
-
-alter table public.gl_analytics_events
-  add column if not exists landing_id uuid
-  references public.gl_landings (id) on delete set null;
-
-create index if not exists gl_analytics_events_landing_created_idx
-  on public.gl_analytics_events (landing_id, created_at desc);
-
-create or replace function public.gl_set_updated_at()
-returns trigger
-language plpgsql
-set search_path = pg_catalog, public
-as $$
-begin
-  new.updated_at = now();
-  return new;
-end;
-$$;
-
-drop trigger if exists gl_landings_set_updated_at on public.gl_landings;
-create trigger gl_landings_set_updated_at
-before update on public.gl_landings
-for each row execute function public.gl_set_updated_at();
-
--- Security-definer membership checks avoid recursive reads of gl_usuarios from RLS policies.
-create schema if not exists gamalink_internal;
-revoke all on schema gamalink_internal from public, anon, authenticated;
-grant usage on schema gamalink_internal to authenticated;
-
-create or replace function gamalink_internal.gl_user_belongs_to_empresa(p_empresa_id bigint)
-returns boolean
-language sql
-stable
-security definer
-set search_path = pg_catalog, public
-as $$
-  select exists (
-    select 1
-    from public.gl_usuarios u
-    where u.empresa_id = p_empresa_id
-      and u.auth_id = (select auth.uid())
-  );
-$$;
-
-revoke all on function gamalink_internal.gl_user_belongs_to_empresa(bigint) from public, anon;
-grant execute on function gamalink_internal.gl_user_belongs_to_empresa(bigint) to authenticated;
-
-create or replace function gamalink_internal.gl_is_superadmin()
-returns boolean
-language sql
-stable
-security invoker
-set search_path = pg_catalog
-as $$
-  select (select auth.uid()) = '37830e1a-2833-4dd2-b396-c613120601aa'::uuid;
-$$;
-
-revoke all on function gamalink_internal.gl_is_superadmin() from public, anon;
-grant execute on function gamalink_internal.gl_is_superadmin() to authenticated;
-
-drop policy if exists gl_empresas_superadmin_read on public.gl_empresas;
-create policy gl_empresas_superadmin_read
-on public.gl_empresas
-for select
-to authenticated
-using (gamalink_internal.gl_is_superadmin());
-
-drop policy if exists "Ver usuarios de la misma empresa" on public.gl_usuarios;
-drop policy if exists gl_usuarios_member_read on public.gl_usuarios;
-create policy gl_usuarios_member_read
-on public.gl_usuarios
-for select
-to authenticated
-using (auth_id = (select auth.uid()) or gamalink_internal.gl_user_belongs_to_empresa(empresa_id));
-
-alter table public.gl_landings enable row level security;
-
-grant select on public.gl_landings to anon, authenticated;
-grant insert, update, delete on public.gl_landings to authenticated;
-
-drop policy if exists gl_landings_public_read_published on public.gl_landings;
-create policy gl_landings_public_read_published
-on public.gl_landings
-for select
-to anon, authenticated
-using (status = 'published');
-
-drop policy if exists gl_landings_member_read_own on public.gl_landings;
-create policy gl_landings_member_read_own
-on public.gl_landings
-for select
-to authenticated
-using (
-  gamalink_internal.gl_is_superadmin()
-  or gamalink_internal.gl_user_belongs_to_empresa(empresa_id)
+CREATE TABLE public.configuracion (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  nombre_negocio text DEFAULT 'Mi Negocio'::text,
+  moneda text DEFAULT 'MXN'::text,
+  correo_contacto text,
+  correo_bienvenida_activo boolean DEFAULT false,
+  correo_vencimiento_activo boolean DEFAULT false,
+  citas_publicas_activo boolean DEFAULT false,
+  servicios_citas ARRAY DEFAULT ARRAY['Corte'::text, 'Peinado'::text, 'Tinte'::text, 'Tratamiento'::text],
+  CONSTRAINT configuracion_pkey PRIMARY KEY (id)
 );
-
-drop policy if exists gl_landings_member_insert_own on public.gl_landings;
-create policy gl_landings_member_insert_own
-on public.gl_landings
-for insert
-to authenticated
-with check (
-  gamalink_internal.gl_is_superadmin()
-  or gamalink_internal.gl_user_belongs_to_empresa(empresa_id)
+CREATE TABLE public.planes (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  nombre text NOT NULL,
+  precio numeric DEFAULT 0,
+  duracion_dias integer DEFAULT 30,
+  activo boolean DEFAULT true,
+  CONSTRAINT planes_pkey PRIMARY KEY (id)
 );
-
-drop policy if exists gl_landings_member_update_own on public.gl_landings;
-create policy gl_landings_member_update_own
-on public.gl_landings
-for update
-to authenticated
-using (
-  gamalink_internal.gl_is_superadmin()
-  or gamalink_internal.gl_user_belongs_to_empresa(empresa_id)
-)
-with check (
-  gamalink_internal.gl_is_superadmin()
-  or gamalink_internal.gl_user_belongs_to_empresa(empresa_id)
+CREATE TABLE public.pagos (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  cliente_id bigint,
+  fecha_pago date NOT NULL,
+  monto numeric NOT NULL,
+  plan text NOT NULL,
+  metodo_pago text DEFAULT 'Efectivo'::text,
+  notas text,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT pagos_pkey PRIMARY KEY (id),
+  CONSTRAINT pagos_cliente_id_fkey FOREIGN KEY (cliente_id) REFERENCES public.clientes(id)
 );
-
-drop policy if exists gl_landings_member_delete_own on public.gl_landings;
-create policy gl_landings_member_delete_own
-on public.gl_landings
-for delete
-to authenticated
-using (
-  gamalink_internal.gl_is_superadmin()
-  or gamalink_internal.gl_user_belongs_to_empresa(empresa_id)
+CREATE TABLE public.gda_clientes (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  nombre_negocio text NOT NULL,
+  contacto_nombre text,
+  contacto_telefono text,
+  contacto_correo text,
+  plan text NOT NULL,
+  monto_mensual numeric NOT NULL,
+  estado text DEFAULT 'Activo'::text,
+  fecha_inicio date NOT NULL,
+  fecha_vencimiento date,
+  stripe_customer_id text,
+  stripe_subscription_id text,
+  notas text,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT gda_clientes_pkey PRIMARY KEY (id)
 );
-
--- Public tracking may only insert allowlisted events for a currently published landing.
-drop policy if exists "Permitir inserción de eventos desde el tracker" on public.gl_analytics_events;
-drop policy if exists gl_analytics_events_public_landing_insert on public.gl_analytics_events;
-create policy gl_analytics_events_public_landing_insert
-on public.gl_analytics_events
-for insert
-to anon, authenticated
-with check (
-  event_type in (
-    'page_view',
-    'whatsapp_click',
-    'instagram_click',
-    'facebook_click',
-    'phone_click',
-    'email_click',
-    'interaction_click'
-  )
-  and visitor_id is not null
-  and length(visitor_id) between 16 and 128
-  and (path is null or length(path) <= 500)
-  and (source is null or length(source) <= 128)
-  and landing_id is not null
-  and exists (
-    select 1
-    from public.gl_landings l
-    where l.id = gl_analytics_events.landing_id
-      and l.empresa_id = gl_analytics_events.empresa_id
-      and l.status = 'published'
-  )
+CREATE TABLE public.gda_pagos (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  cliente_id bigint,
+  fecha_pago date NOT NULL,
+  monto numeric NOT NULL,
+  metodo text DEFAULT 'Stripe'::text,
+  stripe_payment_id text,
+  notas text,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT gda_pagos_pkey PRIMARY KEY (id),
+  CONSTRAINT gda_pagos_cliente_id_fkey FOREIGN KEY (cliente_id) REFERENCES public.gda_clientes(id)
 );
-
-revoke insert on public.gl_analytics_events from public, anon, authenticated;
-grant insert (empresa_id, landing_id, event_type, path, source, visitor_id)
-  on public.gl_analytics_events to anon, authenticated;
-
--- Analytics are computed only over rows visible under the caller's existing tenant RLS policies.
-create or replace function public.gl_get_landing_analytics(
-  p_landing_id uuid,
-  p_from timestamptz,
-  p_to timestamptz
-)
-returns table (
-  total_views bigint,
-  unique_visitors bigint,
-  whatsapp_clicks bigint,
-  instagram_clicks bigint,
-  facebook_clicks bigint,
-  other_interactions bigint,
-  sources jsonb
-)
-language plpgsql
-stable
-security invoker
-set search_path = pg_catalog, public
-as $$
-begin
-  if p_from is null or p_to is null or p_to <= p_from then
-    raise exception 'El rango de fechas para analíticas no es válido';
-  end if;
-
-  return query
-  select
-    count(*) filter (where e.event_type = 'page_view'),
-    count(distinct e.visitor_id) filter (where e.event_type = 'page_view'),
-    count(*) filter (where e.event_type = 'whatsapp_click'),
-    count(*) filter (where e.event_type = 'instagram_click'),
-    count(*) filter (where e.event_type = 'facebook_click'),
-    count(*) filter (
-      where e.event_type in ('phone_click', 'email_click', 'interaction_click')
-    ),
-    coalesce(
-      (
-        select jsonb_agg(jsonb_build_object('source', grouped.source, 'visits', grouped.visits))
-        from (
-          select coalesce(nullif(e2.source, ''), 'Directo') as source, count(*) as visits
-          from public.gl_analytics_events e2
-          where e2.landing_id = p_landing_id
-            and e2.event_type = 'page_view'
-            and e2.created_at >= p_from
-            and e2.created_at < p_to
-          group by coalesce(nullif(e2.source, ''), 'Directo')
-          order by count(*) desc
-          limit 10
-        ) grouped
-      ),
-      '[]'::jsonb
-    )
-  from public.gl_analytics_events e
-  where e.landing_id = p_landing_id
-    and e.created_at >= p_from
-    and e.created_at < p_to;
-end;
-$$;
-
-revoke all on function public.gl_get_landing_analytics(uuid, timestamptz, timestamptz) from public, anon;
-grant execute on function public.gl_get_landing_analytics(uuid, timestamptz, timestamptz) to authenticated;
-
--- Public reads are needed to display uploaded landing images. Writes and listing are tenant-scoped.
-insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values (
-  'gl-landing-images',
-  'gl-landing-images',
-  true,
-  5242880,
-  array['image/png', 'image/jpeg']::text[]
-)
-on conflict (id) do update
-set public = excluded.public,
-    file_size_limit = excluded.file_size_limit,
-    allowed_mime_types = excluded.allowed_mime_types;
-
-create or replace function gamalink_internal.gl_user_can_manage_landing_asset(p_object_name text)
-returns boolean
-language plpgsql
-stable
-security definer
-set search_path = pg_catalog, public, storage
-as $$
-declare
-  path_parts text[];
-  landing_empresa_id bigint;
-begin
-  path_parts := storage.foldername(p_object_name);
-  if coalesce(array_length(path_parts, 1), 0) <> 2
-     or path_parts[1] !~ '^[0-9]+$'
-     or path_parts[2] !~ '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$' then
-    return false;
-  end if;
-
-  select l.empresa_id
-  into landing_empresa_id
-  from public.gl_landings l
-  where l.id = path_parts[2]::uuid
-    and l.empresa_id = path_parts[1]::bigint;
-
-  return landing_empresa_id is not null
-    and (
-      gamalink_internal.gl_is_superadmin()
-      or gamalink_internal.gl_user_belongs_to_empresa(landing_empresa_id)
-    );
-end;
-$$;
-
-revoke all on function gamalink_internal.gl_user_can_manage_landing_asset(text) from public, anon;
-grant execute on function gamalink_internal.gl_user_can_manage_landing_asset(text) to authenticated;
-
-drop policy if exists gl_landing_images_member_select on storage.objects;
-create policy gl_landing_images_member_select
-on storage.objects
-for select
-to authenticated
-using (bucket_id = 'gl-landing-images' and gamalink_internal.gl_user_can_manage_landing_asset(name));
-
-drop policy if exists gl_landing_images_member_insert on storage.objects;
-create policy gl_landing_images_member_insert
-on storage.objects
-for insert
-to authenticated
-with check (bucket_id = 'gl-landing-images' and gamalink_internal.gl_user_can_manage_landing_asset(name));
-
-drop policy if exists gl_landing_images_member_update on storage.objects;
-create policy gl_landing_images_member_update
-on storage.objects
-for update
-to authenticated
-using (bucket_id = 'gl-landing-images' and gamalink_internal.gl_user_can_manage_landing_asset(name))
-with check (bucket_id = 'gl-landing-images' and gamalink_internal.gl_user_can_manage_landing_asset(name));
-
-drop policy if exists gl_landing_images_member_delete on storage.objects;
-create policy gl_landing_images_member_delete
-on storage.objects
-for delete
-to authenticated
-using (bucket_id = 'gl-landing-images' and gamalink_internal.gl_user_can_manage_landing_asset(name));
-
-commit;
+CREATE TABLE public.citas (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  nombre_cliente text NOT NULL,
+  telefono text,
+  correo text,
+  servicio text,
+  fecha date NOT NULL,
+  hora time without time zone NOT NULL,
+  duracion_minutos integer DEFAULT 60,
+  estado text DEFAULT 'Pendiente'::text,
+  notas text,
+  origen text DEFAULT 'interno'::text,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT citas_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.gl_planes (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  nombre text NOT NULL,
+  precio numeric DEFAULT 0,
+  limite_leads integer DEFAULT 50,
+  limite_usuarios integer DEFAULT 1,
+  modulo_landing boolean DEFAULT true,
+  modulo_citas boolean DEFAULT false,
+  modulo_cotizador boolean DEFAULT false,
+  CONSTRAINT gl_planes_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.gl_empresas (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  nombre_negocio text NOT NULL,
+  plan_id bigint,
+  estado text DEFAULT 'Activo'::text,
+  stripe_customer_id text,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT gl_empresas_pkey PRIMARY KEY (id),
+  CONSTRAINT gl_empresas_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES public.gl_planes(id)
+);
+CREATE TABLE public.gl_usuarios (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  empresa_id bigint NOT NULL,
+  nombre text NOT NULL,
+  correo text NOT NULL UNIQUE,
+  rol text DEFAULT 'admin'::text,
+  auth_id uuid,
+  CONSTRAINT gl_usuarios_pkey PRIMARY KEY (id),
+  CONSTRAINT gl_usuarios_empresa_id_fkey FOREIGN KEY (empresa_id) REFERENCES public.gl_empresas(id)
+);
+CREATE TABLE public.gl_leads (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  empresa_id bigint NOT NULL,
+  nombre text NOT NULL,
+  telefono text,
+  correo text,
+  origen text,
+  estado text DEFAULT 'Nuevo'::text,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT gl_leads_pkey PRIMARY KEY (id),
+  CONSTRAINT gl_leads_empresa_id_fkey FOREIGN KEY (empresa_id) REFERENCES public.gl_empresas(id)
+);
+CREATE TABLE public.gl_citas (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  empresa_id bigint NOT NULL,
+  lead_id bigint,
+  titulo text NOT NULL,
+  fecha_hora timestamp with time zone NOT NULL,
+  estado text DEFAULT 'Pendiente'::text,
+  notas text,
+  CONSTRAINT gl_citas_pkey PRIMARY KEY (id),
+  CONSTRAINT gl_citas_empresa_id_fkey FOREIGN KEY (empresa_id) REFERENCES public.gl_empresas(id),
+  CONSTRAINT gl_citas_lead_id_fkey FOREIGN KEY (lead_id) REFERENCES public.gl_leads(id)
+);
+CREATE TABLE public.gl_analytics_events (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  empresa_id bigint NOT NULL,
+  event_type text NOT NULL,
+  path text,
+  source text,
+  country_code text,
+  visitor_id text,
+  created_at timestamp with time zone DEFAULT now(),
+  landing_id uuid,
+  CONSTRAINT gl_analytics_events_pkey PRIMARY KEY (id),
+  CONSTRAINT gl_analytics_events_empresa_id_fkey FOREIGN KEY (empresa_id) REFERENCES public.gl_empresas(id),
+  CONSTRAINT gl_analytics_events_landing_id_fkey FOREIGN KEY (landing_id) REFERENCES public.gl_landings(id)
+);
+CREATE TABLE public.gl_landings (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  empresa_id bigint NOT NULL,
+  template_key text NOT NULL CHECK (template_key = ANY (ARRAY['bold-red'::text, 'clean-white'::text, 'dark-purple'::text, 'orange-industrial'::text, 'warm-wood'::text])),
+  slug text NOT NULL UNIQUE CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'::text AND (slug <> ALL (ARRAY['admin'::text, 'app'::text, 'www'::text]))),
+  custom_domain text CHECK (custom_domain IS NULL OR btrim(custom_domain) <> ''::text AND custom_domain !~* '(^|\.)gamalink\.online$'::text AND custom_domain !~* '(^|\.)localhost$'::text AND custom_domain !~* '(^|\.)vercel\.app$'::text),
+  status text NOT NULL DEFAULT 'draft'::text CHECK (status = ANY (ARRAY['draft'::text, 'published'::text, 'archived'::text])),
+  content jsonb NOT NULL CHECK (jsonb_typeof(content) = 'object'::text AND
+CASE
+    WHEN jsonb_typeof(content -> 'imagenes'::text) = 'array'::text THEN jsonb_array_length(content -> 'imagenes'::text) <= 5
+    ELSE false
+END),
+  published_at timestamp with time zone,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT gl_landings_pkey PRIMARY KEY (id),
+  CONSTRAINT gl_landings_empresa_id_fkey FOREIGN KEY (empresa_id) REFERENCES public.gl_empresas(id)
+);

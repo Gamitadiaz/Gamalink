@@ -30,8 +30,9 @@ export default async function TenantLandingPage({ searchParams }: TenantPageProp
     notFound();
   }
 
-  const isGamalinkSubdomain = host.endsWith(".gamalink.online");
-  const slug = isGamalinkSubdomain ? host.slice(0, -".gamalink.online".length) : null;
+  // slug.gamalink.online en producción, slug.localhost en desarrollo.
+  const tenantSuffix = [".gamalink.online", ".localhost"].find((suffix) => host.endsWith(suffix));
+  const slug = tenantSuffix ? host.slice(0, -tenantSuffix.length) : null;
   if (slug?.includes(".")) {
     notFound();
   }

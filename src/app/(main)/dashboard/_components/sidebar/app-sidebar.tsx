@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
+
 import Link from "next/link";
 
 import { Command } from "lucide-react";
@@ -16,12 +18,13 @@ import {
 } from "@/components/ui/sidebar";
 import { APP_CONFIG } from "@/config/app-config";
 import { rootUser } from "@/data/users";
+import { type AppRole, filterAccessibleSidebarItems, getUserRole } from "@/lib/dashboard-access";
+import { supabase } from "@/lib/sb/supabase_config";
 import { sidebarItems } from "@/navigation/sidebar/sidebar-items";
 import { usePreferencesStore } from "@/stores/preferences/preferences-provider";
 
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
-import { SupportCard } from "./support-card";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { sidebarVariant, sidebarCollapsible, isSynced } = usePreferencesStore(
@@ -31,9 +34,48 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       isSynced: s.isSynced,
     })),
   );
+  const [userId, setUserId] = useState<string | undefined>();
+  const [userRole, setUserRole] = useState<AppRole>("cliente");
+  const [currentUser, setCurrentUser] = useState(rootUser);
+
+  useEffect(() => {
+    void supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) {
+        return;
+      }
+
+      const { data: userRow } = await supabase.from("gl_usuarios").select("*").eq("auth_id", user.id).maybeSingle();
+
+      const role = getUserRole(user.id, (userRow?.role_slug ?? userRow?.rol ?? null) as string | null);
+      const metadata = (user.user_metadata ?? {}) as Record<string, unknown>;
+      const displayName =
+        (typeof metadata.full_name === "string" && metadata.full_name) ||
+        (typeof metadata.name === "string" && metadata.name) ||
+        user.email ||
+        rootUser.name;
+
+      setUserId(user.id);
+      setUserRole(role);
+      setCurrentUser({
+        id: user.id,
+        name: displayName,
+        username: (typeof metadata.user_name === "string" && metadata.user_name) || user.email || rootUser.username,
+        email: user.email || rootUser.email,
+        avatar:
+          (typeof metadata.avatar_url === "string" && metadata.avatar_url) ||
+          (typeof metadata.picture === "string" && metadata.picture) ||
+          rootUser.avatar,
+        role,
+      });
+    });
+  }, []);
 
   const variant = isSynced ? sidebarVariant : props.variant;
   const collapsible = isSynced ? sidebarCollapsible : props.collapsible;
+  const filteredSidebarItems = useMemo(
+    () => filterAccessibleSidebarItems(sidebarItems, userId, userRole),
+    [userId, userRole],
+  );
 
   return (
     <Sidebar {...props} variant={variant} collapsible={collapsible}>
@@ -50,11 +92,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={sidebarItems} />
+        <NavMain items={filteredSidebarItems} />
       </SidebarContent>
       <SidebarFooter>
-        <SupportCard />
-        <NavUser user={rootUser} />
+        <NavUser user={currentUser} />
       </SidebarFooter>
     </Sidebar>
   );

@@ -2,16 +2,17 @@ import type { ReactNode } from "react";
 
 import { cookies } from "next/headers";
 
+import { createServerClient } from "@supabase/ssr";
 import { cn } from "cn";
 
 import { AppSidebar } from "@/app/(main)/dashboard/_components/sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { users } from "@/data/users";
+import { getUserRole } from "@/lib/dashboard-access";
 import { getPreference } from "@/server/server-actions";
 
 import { AccountSwitcher } from "./_components/header/account-switcher";
-import { GitHubRepositoriesMenu } from "./_components/header/github-repositories-menu";
 import { LayoutControls } from "./_components/header/layout-controls";
 import { SearchDialog } from "./_components/header/search-dialog";
 import { ThemeSwitcher } from "./_components/header/theme-switcher";
@@ -23,6 +24,49 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
     getPreference("sidebar_variant"),
     getPreference("sidebar_collapsible"),
   ]);
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+    {
+      cookies: {
+        getAll: () => cookieStore.getAll(),
+        // Los Server Components no pueden escribir cookies; el proxy ya refresca la sesión.
+        setAll: () => {
+          /* no-op */
+        },
+      },
+    },
+  );
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const metadata = (user?.user_metadata ?? {}) as Record<string, unknown>;
+  let userRole: string | null = null;
+
+  if (user) {
+    const { data: userRow } = await supabase.from("gl_usuarios").select("*").eq("auth_id", user.id).maybeSingle();
+
+    userRole = (userRow?.role_slug ?? userRow?.rol ?? null) as string | null;
+  }
+
+  const currentUser = user
+    ? {
+        id: user.id,
+        name:
+          (typeof metadata.full_name === "string" && metadata.full_name) ||
+          (typeof metadata.name === "string" && metadata.name) ||
+          user.email ||
+          users[0].name,
+        email: user.email || users[0].email,
+        avatar:
+          (typeof metadata.avatar_url === "string" && metadata.avatar_url) ||
+          (typeof metadata.picture === "string" && metadata.picture) ||
+          users[0].avatar,
+        role: getUserRole(user.id, userRole),
+      }
+    : users[0];
 
   return (
     <SidebarProvider
@@ -63,8 +107,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
             <div className="flex items-center gap-2">
               <LayoutControls />
               <ThemeSwitcher />
-              <GitHubRepositoriesMenu />
-              <AccountSwitcher users={users} />
+              <AccountSwitcher users={[currentUser]} />
             </div>
           </div>
         </header>
