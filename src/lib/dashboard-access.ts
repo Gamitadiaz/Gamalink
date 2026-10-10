@@ -23,7 +23,7 @@ const COMMON_ROUTES = ["/dashboard/default", "/dashboard/profile"];
 // Lo que se desbloquea con cada servicio contratado.
 const SERVICE_ROUTES: Record<Servicio, string[]> = {
   landing: ["/dashboard/configuration", "/dashboard/landing-analytics"],
-  membresias: [],
+  membresias: ["/dashboard/membresias"],
   citas: [],
   tienda: [],
 };

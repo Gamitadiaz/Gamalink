@@ -43,7 +43,7 @@ Superadmin (dueño de Gamalink) ── ve y administra todo
 | Servicio | Qué hace el dueño | Base visual de la plantilla |
 |---|---|---|
 | `landing` | Editar su landing, subir imágenes, ver métricas | configuration, landing-analytics |
-| `membresias` | Socios, suscripciones, pagos, ganancias | finance, users |
+| `membresias` ✅ | Socios, planes, pagos, ingresos, quién vence (`/dashboard/membresias`) | finance, users |
 | `citas` | Agenda, servicios, recordatorios | calendar |
 | `tienda` | Productos, inventario, ventas | ecommerce |
 | (todos) | Leads / contactos | crm |
