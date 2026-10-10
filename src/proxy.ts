@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import { createServerClient } from "@supabase/ssr";
 
-import { isDashboardRouteAllowed, isProtectedAppRoute } from "@/lib/dashboard-access";
+import { isProtectedAppRoute, isRouteAllowed, parseContext } from "@/lib/dashboard-access";
 
 export async function proxy(request: NextRequest) {
   const host = request.nextUrl.hostname.toLowerCase().replace(/\.$/, "");
@@ -71,14 +71,10 @@ export async function proxy(request: NextRequest) {
   }
 
   if (user && isProtectedAppRoute(pathname)) {
-    // Misma fuente que el sidebar y el layout: role_slug (siempre tiene valor, por defecto 'cliente').
-    const { data: userRow } = await supabase
-      .from("gl_usuarios")
-      .select("role_slug")
-      .eq("auth_id", user.id)
-      .maybeSingle();
+    // Misma fuente que el layout y el sidebar: rol + servicios activos de la empresa.
+    const { data: context } = await supabase.rpc("gl_mi_contexto");
 
-    if (!isDashboardRouteAllowed(pathname, user.id, userRow?.role_slug ?? null)) {
+    if (!isRouteAllowed(pathname, parseContext(user.id, context))) {
       const unauthorizedUrl = new URL("/unauthorized", request.url);
       const redirectResponse = NextResponse.redirect(unauthorizedUrl);
       // Conserva las cookies de sesión que Supabase haya refrescado en esta petición.

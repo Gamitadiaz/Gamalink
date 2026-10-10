@@ -1,15 +1,14 @@
 import type { ReactNode } from "react";
 
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-import { createServerClient } from "@supabase/ssr";
 import { cn } from "cn";
 
 import { AppSidebar } from "@/app/(main)/dashboard/_components/sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { users } from "@/data/users";
-import { getUserRole } from "@/lib/dashboard-access";
+import { getSessionContext } from "@/lib/session";
 import { getPreference } from "@/server/server-actions";
 
 import { AccountSwitcher } from "./_components/header/account-switcher";
@@ -25,48 +24,27 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
     getPreference("sidebar_collapsible"),
   ]);
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        // Los Server Components no pueden escribir cookies; el proxy ya refresca la sesión.
-        setAll: () => {
-          /* no-op */
-        },
-      },
-    },
-  );
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const metadata = (user?.user_metadata ?? {}) as Record<string, unknown>;
-  let userRole: string | null = null;
-
-  if (user) {
-    const { data: userRow } = await supabase.from("gl_usuarios").select("*").eq("auth_id", user.id).maybeSingle();
-
-    userRole = (userRow?.role_slug ?? userRow?.rol ?? null) as string | null;
+  const session = await getSessionContext();
+  // El proxy ya exige sesión en /dashboard; esto solo cubre el caso raro de que expire a medio request.
+  if (!session) {
+    redirect("/login");
   }
 
-  const currentUser = user
-    ? {
-        id: user.id,
-        name:
-          (typeof metadata.full_name === "string" && metadata.full_name) ||
-          (typeof metadata.name === "string" && metadata.name) ||
-          user.email ||
-          users[0].name,
-        email: user.email || users[0].email,
-        avatar:
-          (typeof metadata.avatar_url === "string" && metadata.avatar_url) ||
-          (typeof metadata.picture === "string" && metadata.picture) ||
-          users[0].avatar,
-        role: getUserRole(user.id, userRole),
-      }
-    : users[0];
+  const { user } = session;
+  const metadata = user.user_metadata as Record<string, unknown>;
+  const currentUser = {
+    id: user.id,
+    name:
+      (typeof metadata.full_name === "string" && metadata.full_name) ||
+      (typeof metadata.name === "string" && metadata.name) ||
+      (user.email ?? "Usuario"),
+    email: user.email ?? "",
+    avatar:
+      (typeof metadata.avatar_url === "string" && metadata.avatar_url) ||
+      (typeof metadata.picture === "string" && metadata.picture) ||
+      "",
+    role: session.role,
+  };
 
   return (
     <SidebarProvider
@@ -77,7 +55,12 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant={variant} collapsible={collapsible} />
+      <AppSidebar
+        access={{ role: session.role, servicios: session.servicios }}
+        collapsible={collapsible}
+        user={currentUser}
+        variant={variant}
+      />
       <SidebarInset
         className={cn(
           "[html[data-content-layout=centered]_&>*]:mx-auto",

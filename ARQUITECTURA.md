@@ -74,7 +74,10 @@ Mientras se migran quedan cerradas: solo el superadmin puede leerlas.
 ## Archivos clave
 
 - `src/proxy.ts` — subdominios/dominios de landings y protección de rutas por rol.
-- `src/lib/dashboard-access.ts` — qué rutas ve cada rol.
+- `src/lib/dashboard-access.ts` — qué rutas ve cada rol y qué rutas desbloquea cada servicio
+  (`SERVICE_ROUTES`). Al crear un módulo nuevo, agregar sus rutas ahí.
+- `src/lib/session.ts` — `getSessionContext()`: usuario, rol, empresas y servicios (vía la función
+  `gl_mi_contexto()` de Supabase), una vez por request.
 - `src/app/tenant/page.tsx` — sirve la landing pública según el dominio.
 - `src/lib/landings/` — modelo y validación del contenido de las landings.
 - Scripts SQL en la raíz (`*.sql`) — se ejecutan a mano en Supabase → SQL Editor.
