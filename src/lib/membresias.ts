@@ -1,3 +1,5 @@
+import { diasEntre } from "@/lib/formato";
+
 export const METODOS_PAGO = [
   { key: "efectivo", label: "Efectivo" },
   { key: "tarjeta", label: "Tarjeta" },
@@ -33,23 +35,6 @@ export type EstadoSocio = "activo" | "por_vencer" | "vencido" | "sin_pagos" | "b
 // Días antes del vencimiento en que un socio cuenta como "por vencer".
 export const DIAS_AVISO = 7;
 
-const ZONA = "America/Mexico_City";
-
-// Fecha de hoy en México como 'YYYY-MM-DD' (las fechas de la BD son 'date', sin hora).
-export function hoyMx(): string {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: ZONA }).format(new Date());
-}
-
-export function sumarDias(fecha: string, dias: number): string {
-  const date = new Date(`${fecha}T12:00:00Z`);
-  date.setUTCDate(date.getUTCDate() + dias);
-  return date.toISOString().slice(0, 10);
-}
-
-export function diasEntre(desde: string, hasta: string): number {
-  return Math.round((Date.parse(`${hasta}T12:00:00Z`) - Date.parse(`${desde}T12:00:00Z`)) / 86_400_000);
-}
-
 export function estadoSocio(socio: Pick<SocioResumen, "activo" | "vigente_hasta">, hoy: string): EstadoSocio {
   if (!socio.activo) {
     return "baja";
@@ -79,24 +64,6 @@ export const ESTADO_SOCIO_CLASS: Record<EstadoSocio, string> = {
   sin_pagos: "bg-muted text-muted-foreground",
   baja: "bg-muted text-muted-foreground",
 };
-
-const moneyFormatter = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" });
-
-export function formatoDinero(valor: number | null | undefined) {
-  return moneyFormatter.format(Number(valor ?? 0));
-}
-
-export function formatoFecha(fecha: string | null | undefined) {
-  if (!fecha) {
-    return "—";
-  }
-  return new Date(`${fecha}T12:00:00Z`).toLocaleDateString("es-MX", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-}
 
 export function duracionLabel(dias: number) {
   if (dias === 1) return "1 día";

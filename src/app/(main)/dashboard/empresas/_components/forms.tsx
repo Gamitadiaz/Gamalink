@@ -4,25 +4,15 @@ import { useActionState, useState } from "react";
 
 import { Mail, Plus, Save, X } from "lucide-react";
 
+import { FormMessage } from "@/components/form-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { Servicio } from "@/lib/dashboard-access";
-import { type ActionState, ESTADOS_EMPRESA, ESTADOS_SERVICIO, SERVICIOS, type ServicioRow } from "@/lib/empresas";
+import { ESTADOS_EMPRESA, ESTADOS_SERVICIO, SERVICIOS, type ServicioRow } from "@/lib/empresas";
 import { actualizarEmpresa, crearEmpresa, guardarServicio, invitarDueno } from "@/server/empresas-actions";
 
 const selectClassName = "h-9 w-full rounded-lg border border-input bg-background px-3 text-sm";
-
-function FormMessage({ state }: { state: ActionState }) {
-  if (!state) {
-    return null;
-  }
-  return (
-    <p className={state.ok ? "text-muted-foreground text-sm" : "text-destructive text-sm"} role="status">
-      {state.message}
-    </p>
-  );
-}
 
 export function NuevaEmpresaForm() {
   const [open, setOpen] = useState(false);

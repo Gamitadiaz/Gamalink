@@ -6,14 +6,11 @@ import type { Metadata } from "next";
 
 import { Badge } from "@/components/ui/badge";
 import { resolverEmpresa } from "@/lib/empresa-actual";
+import { diasEntre, formatoDinero, formatoFecha, hoyMx } from "@/lib/formato";
 import {
-  diasEntre,
   ESTADO_SOCIO_CLASS,
   ESTADO_SOCIO_LABEL,
   estadoSocio,
-  formatoDinero,
-  formatoFecha,
-  hoyMx,
   METODOS_PAGO,
   type PlanMembresia,
   type SocioResumen,

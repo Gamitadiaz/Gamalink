@@ -25,7 +25,7 @@ const SERVICE_ROUTES: Record<Servicio, string[]> = {
   landing: ["/dashboard/configuration", "/dashboard/landing-analytics"],
   membresias: ["/dashboard/membresias"],
   citas: [],
-  tienda: [],
+  tienda: ["/dashboard/tienda"],
 };
 
 export function normalizeRole(userId?: string | null, rawRole?: string | null): AppRole {

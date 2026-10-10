@@ -6,13 +6,12 @@ import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { resolverEmpresa } from "@/lib/empresa-actual";
+import { formatoFecha, hoyMx } from "@/lib/formato";
 import {
   ESTADO_SOCIO_CLASS,
   ESTADO_SOCIO_LABEL,
   type EstadoSocio,
   estadoSocio,
-  formatoFecha,
-  hoyMx,
   type PlanMembresia,
   type SocioResumen,
 } from "@/lib/membresias";

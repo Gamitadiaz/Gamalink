@@ -4,12 +4,13 @@ import { useActionState, useState, useTransition } from "react";
 
 import { Plus, Save, Trash2, UserPlus, X } from "lucide-react";
 
+import { FormMessage } from "@/components/form-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import type { ActionState } from "@/lib/empresas";
-import { duracionLabel, formatoDinero, hoyMx, METODOS_PAGO, type PlanMembresia } from "@/lib/membresias";
+import { formatoDinero, hoyMx } from "@/lib/formato";
+import { duracionLabel, METODOS_PAGO, type PlanMembresia } from "@/lib/membresias";
 import {
   actualizarSocio,
   cambiarEstadoPlan,
@@ -21,15 +22,6 @@ import {
 } from "@/server/membresias-actions";
 
 const selectClassName = "h-9 w-full rounded-lg border border-input bg-background px-3 text-sm";
-
-function FormMessage({ state }: { state: ActionState }) {
-  if (!state) return null;
-  return (
-    <p className={state.ok ? "text-muted-foreground text-sm" : "text-destructive text-sm"} role="status">
-      {state.message}
-    </p>
-  );
-}
 
 // ---------- Planes ----------
 

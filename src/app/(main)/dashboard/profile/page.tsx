@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { APP_CONFIG } from "@/config/app-config";
 import { type ServicioRow, servicioLabel } from "@/lib/empresas";
-import { formatoDinero, formatoFecha } from "@/lib/membresias";
+import { formatoDinero, formatoFecha } from "@/lib/formato";
 import { createSupabaseServerClient } from "@/lib/sb/server";
 import { getSessionContext } from "@/lib/session";
 

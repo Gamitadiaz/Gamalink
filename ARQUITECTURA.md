@@ -45,7 +45,7 @@ Superadmin (dueño de Gamalink) ── ve y administra todo
 | `landing` | Editar su landing, subir imágenes, ver métricas | configuration, landing-analytics |
 | `membresias` ✅ | Socios, planes, pagos, ingresos, quién vence (`/dashboard/membresias`) | finance, users |
 | `citas` | Agenda, servicios, recordatorios | calendar |
-| `tienda` | Productos, inventario, ventas | ecommerce |
+| `tienda` ✅ | Punto de venta, productos, inventario con historial, ventas y ganancia (`/dashboard/tienda`) | ecommerce |
 | (todos) | Leads / contactos | crm |
 
 Panel del superadmin: empresas, servicios contratados, cobranza (`gl_cobros`), usuarios.
@@ -80,6 +80,8 @@ Mientras se migran quedan cerradas: solo el superadmin puede leerlas.
   `gl_mi_contexto()` de Supabase), una vez por request.
 - `src/app/(main)/dashboard/empresas/` + `src/server/empresas-actions.ts` — panel del superadmin:
   empresas, servicios contratados e invitación de dueños.
+- `src/app/(main)/dashboard/_components/modulo/` — piezas comunes de los módulos (encabezado con
+  pestañas y selector de empresa, gráfica de dinero). `src/lib/formato.ts` — fechas (hora de México) y dinero.
 - `src/lib/sb/admin.ts` — cliente con service role (solo servidor, solo tras verificar superadmin).
 - `src/app/auth/set-password/` — destino del correo de invitación: el dueño crea su contraseña.
 - `src/app/tenant/page.tsx` — sirve la landing pública según el dominio.

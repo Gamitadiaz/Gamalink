@@ -6,7 +6,8 @@ import { redirect } from "next/navigation";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { ActionState } from "@/lib/empresas";
-import { hoyMx, METODOS_PAGO, type MetodoPago, sumarDias } from "@/lib/membresias";
+import { hoyMx, sumarDias } from "@/lib/formato";
+import { METODOS_PAGO, type MetodoPago } from "@/lib/membresias";
 import { createSupabaseServerClient } from "@/lib/sb/server";
 import { getSessionContext } from "@/lib/session";
 

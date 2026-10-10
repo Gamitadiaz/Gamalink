@@ -5,20 +5,11 @@ import type { Metadata } from "next";
 
 import { Badge } from "@/components/ui/badge";
 import { resolverEmpresa } from "@/lib/empresa-actual";
-import {
-  DIAS_AVISO,
-  diasEntre,
-  ESTADO_SOCIO_CLASS,
-  ESTADO_SOCIO_LABEL,
-  estadoSocio,
-  formatoDinero,
-  formatoFecha,
-  hoyMx,
-  type SocioResumen,
-} from "@/lib/membresias";
+import { diasEntre, formatoDinero, formatoFecha, hoyMx } from "@/lib/formato";
+import { DIAS_AVISO, ESTADO_SOCIO_CLASS, ESTADO_SOCIO_LABEL, estadoSocio, type SocioResumen } from "@/lib/membresias";
 import { createSupabaseServerClient } from "@/lib/sb/server";
 
-import { IngresosChart } from "./_components/ingresos-chart";
+import { DineroChart } from "../_components/modulo/dinero-chart";
 import { conEmpresa, ModuloHeader, SinEmpresa } from "./_components/modulo-header";
 
 export const metadata: Metadata = { title: "Membresías" };
@@ -125,7 +116,7 @@ export default async function MembresiasResumenPage({ searchParams }: { searchPa
             <h2 className="font-semibold text-lg">Ingresos por mes</h2>
             <p className="text-muted-foreground text-sm">Pagos registrados en los últimos 6 meses.</p>
           </div>
-          <IngresosChart data={meses.map(({ mes: m, ingresos }) => ({ mes: m, ingresos }))} />
+          <DineroChart data={meses.map((m) => ({ etiqueta: m.mes, valor: m.ingresos }))} serie="Ingresos" />
         </section>
 
         <section className="space-y-3 rounded-xl border bg-card p-4 md:p-6 xl:col-span-2">

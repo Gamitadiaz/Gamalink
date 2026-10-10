@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 
 import { Badge } from "@/components/ui/badge";
 import { resolverEmpresa } from "@/lib/empresa-actual";
-import { duracionLabel, formatoDinero, type PlanMembresia } from "@/lib/membresias";
+import { formatoDinero } from "@/lib/formato";
+import { duracionLabel, type PlanMembresia } from "@/lib/membresias";
 import { createSupabaseServerClient } from "@/lib/sb/server";
 
 import { NuevoPlanForm, PlanEstadoButton } from "../_components/forms";

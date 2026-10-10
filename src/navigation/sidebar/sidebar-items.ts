@@ -21,6 +21,7 @@ import {
   ReceiptText,
   Server,
   ShoppingBag,
+  Store,
   UserRound,
   Users,
 } from "lucide-react";
@@ -105,6 +106,12 @@ export const sidebarItems: NavGroup[] = [
         title: "Membresías",
         url: "/dashboard/membresias",
         icon: Dumbbell,
+      },
+      {
+        id: "tienda",
+        title: "Tiendita",
+        url: "/dashboard/tienda",
+        icon: Store,
       },
       {
         id: "profile",
