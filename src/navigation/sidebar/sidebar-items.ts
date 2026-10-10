@@ -1,5 +1,6 @@
 import {
   Banknote,
+  Building2,
   Calendar,
   ChartBar,
   CheckSquare,
@@ -62,6 +63,19 @@ export interface NavGroup {
 }
 
 export const sidebarItems: NavGroup[] = [
+  {
+    // Solo superadmin: ninguna de estas rutas está en COMMON_ROUTES ni en SERVICE_ROUTES.
+    id: 0,
+    label: "Gamalink",
+    items: [
+      {
+        id: "empresas",
+        title: "Empresas",
+        url: "/dashboard/empresas",
+        icon: Building2,
+      },
+    ],
+  },
   {
     id: 1,
     label: "Dashboards",

@@ -78,6 +78,10 @@ Mientras se migran quedan cerradas: solo el superadmin puede leerlas.
   (`SERVICE_ROUTES`). Al crear un módulo nuevo, agregar sus rutas ahí.
 - `src/lib/session.ts` — `getSessionContext()`: usuario, rol, empresas y servicios (vía la función
   `gl_mi_contexto()` de Supabase), una vez por request.
+- `src/app/(main)/dashboard/empresas/` + `src/server/empresas-actions.ts` — panel del superadmin:
+  empresas, servicios contratados e invitación de dueños.
+- `src/lib/sb/admin.ts` — cliente con service role (solo servidor, solo tras verificar superadmin).
+- `src/app/auth/set-password/` — destino del correo de invitación: el dueño crea su contraseña.
 - `src/app/tenant/page.tsx` — sirve la landing pública según el dominio.
 - `src/lib/landings/` — modelo y validación del contenido de las landings.
 - Scripts SQL en la raíz (`*.sql`) — se ejecutan a mano en Supabase → SQL Editor.

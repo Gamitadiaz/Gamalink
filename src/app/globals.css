@@ -8,6 +8,25 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Variantes de estado de los componentes (antes venían de "shadcn/tailwind.css").
+   Sin ellas, Tailwind trata data-active="false" como activo y todo el sidebar se pinta seleccionado.
+   Aceptan el estilo de Radix (data-state / data-orientation) y el de Base UI (data-open, data-checked…). */
+@custom-variant data-open (&:where([data-state="open"], [data-open]:not([data-open="false"])));
+@custom-variant data-closed (&:where([data-state="closed"], [data-closed]:not([data-closed="false"])));
+@custom-variant data-checked (&:where([data-state="checked"], [data-checked]:not([data-checked="false"])));
+@custom-variant data-unchecked (&:where([data-state="unchecked"], [data-unchecked]:not([data-unchecked="false"])));
+@custom-variant data-active (&:where([data-state="active"], [data-active]:not([data-active="false"])));
+@custom-variant data-pressed (&:where([data-state="on"], [data-pressed]:not([data-pressed="false"])));
+@custom-variant data-selected (&:where([data-selected]:not([data-selected="false"])));
+@custom-variant data-disabled (&:where([data-disabled]:not([data-disabled="false"])));
+@custom-variant data-highlighted (&:where([data-highlighted]:not([data-highlighted="false"])));
+@custom-variant data-inset (&:where([data-inset]:not([data-inset="false"])));
+@custom-variant data-invalid (&:where([data-invalid]:not([data-invalid="false"])));
+@custom-variant data-placeholder (&:where([data-placeholder]:not([data-placeholder="false"])));
+@custom-variant data-popup-open (&:where([data-popup-open]:not([data-popup-open="false"])));
+@custom-variant data-horizontal (&:where([data-orientation="horizontal"]));
+@custom-variant data-vertical (&:where([data-orientation="vertical"]));
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

@@ -56,7 +56,7 @@ export async function proxy(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  const publicRoutes = ["/login", "/register", "/plantillas", "/precios", "/preview", "/"];
+  const publicRoutes = ["/login", "/register", "/plantillas", "/precios", "/preview", "/auth", "/"];
 
   const isPublicRoute = publicRoutes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
 
