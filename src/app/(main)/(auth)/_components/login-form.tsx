@@ -11,9 +11,11 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/lib/sb/supabase_config";
+import { correoParaLogin } from "@/lib/usuarios";
 
 const formSchema = z.object({
-  email: z.email({ message: "Por favor, ingresa un correo electrónico válido." }),
+  // Correo, o "usuario" para quienes no tienen correo (ver lib/usuarios.ts).
+  email: z.string().trim().min(3, { message: "Escribe tu correo o tu usuario." }),
   password: z.string().min(6, { message: "La contraseña debe tener al menos 6 caracteres." }),
 });
 
@@ -31,19 +33,20 @@ export function LoginForm() {
   // Lógica real de autenticación con Supabase
   async function onSubmit(data: z.infer<typeof formSchema>) {
     const { error } = await supabase.auth.signInWithPassword({
-      email: data.email,
+      email: correoParaLogin(data.email),
       password: data.password,
     });
 
     if (error) {
-      toast.error("Error de autenticación", {
-        description: error.message,
+      toast.error("No se pudo iniciar sesión", {
+        description:
+          error.message === "Invalid login credentials" ? "Usuario, correo o contraseña incorrectos." : error.message,
       });
       return;
     }
 
     toast.success("¡Bienvenido de vuelta!");
-    router.push("../../dashboard");
+    router.push("/dashboard");
     router.refresh(); // Fuerza a Next.js a actualizar los datos del servidor
   }
 
@@ -55,13 +58,17 @@ export function LoginForm() {
           name="email"
           render={({ field, fieldState }) => (
             <Field className="gap-1.5" data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="login-email">Correo electrónico</FieldLabel>
+              <FieldLabel htmlFor="login-email">Correo o usuario</FieldLabel>
               <Input
                 {...field}
                 id="login-email"
-                type="email"
-                placeholder="correo@ejemplo.com"
-                autoComplete="email"
+                type="text"
+                inputMode="email"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                placeholder="correo@ejemplo.com o tu usuario"
+                autoComplete="username"
                 aria-invalid={fieldState.invalid}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

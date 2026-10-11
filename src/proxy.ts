@@ -56,7 +56,13 @@ export async function proxy(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  const publicRoutes = ["/login", "/register", "/plantillas", "/precios", "/preview", "/auth", "/"];
+  // Registro oculto (las cuentas las crea Gamalink) y páginas de acceso de la plantilla (/v2): todo va al login.
+  const hiddenAuthRoutes = ["/register", "/v2"];
+  if (hiddenAuthRoutes.some((route) => pathname === route || pathname.startsWith(`${route}/`))) {
+    return NextResponse.redirect(new URL(user ? "/dashboard" : "/login", request.url));
+  }
+
+  const publicRoutes = ["/login", "/plantillas", "/precios", "/preview", "/auth", "/aviso-de-privacidad", "/"];
 
   const isPublicRoute = publicRoutes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
 
@@ -65,7 +71,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (user && (pathname.startsWith("/login") || pathname.startsWith("/register"))) {
+  if (user && pathname.startsWith("/login")) {
     const dashboardUrl = new URL("/dashboard", request.url);
     return NextResponse.redirect(dashboardUrl);
   }

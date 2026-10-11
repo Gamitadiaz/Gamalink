@@ -7,8 +7,9 @@ import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { SERVICIOS, type ServicioRow } from "@/lib/empresas";
 import { createSupabaseServerClient } from "@/lib/sb/server";
+import { usuarioDeCorreo } from "@/lib/usuarios";
 
-import { EmpresaDatosForm, InvitarDuenoForm, ServicioForm } from "../_components/forms";
+import { AltaDuenoForm, EmpresaDatosForm, RestablecerContrasenaButton, ServicioForm } from "../_components/forms";
 
 export const metadata: Metadata = {
   title: "Empresa",
@@ -103,11 +104,21 @@ export default async function EmpresaPage({ params }: { params: Promise<{ empres
               <li className="flex flex-wrap items-center justify-between gap-2 p-3" key={usuario.id}>
                 <div className="min-w-0">
                   <p className="truncate font-medium text-sm">{usuario.nombre}</p>
-                  <p className="truncate text-muted-foreground text-xs">{usuario.correo}</p>
+                  <p className="truncate text-muted-foreground text-xs">
+                    {usuarioDeCorreo(usuario.correo) ? `Usuario: ${usuarioDeCorreo(usuario.correo)}` : usuario.correo}
+                  </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center justify-end gap-2">
                   {usuario.auth_id ? null : <Badge variant="outline">Sin cuenta</Badge>}
+                  {usuarioDeCorreo(usuario.correo) ? <Badge variant="outline">Sin correo</Badge> : null}
                   <Badge variant="secondary">{ROLE_LABELS[usuario.role_slug] ?? usuario.role_slug}</Badge>
+                  {usuario.auth_id && usuario.role_slug !== "superadmin" ? (
+                    <RestablecerContrasenaButton
+                      empresaId={empresa.id}
+                      telefono={empresa.contacto_telefono}
+                      usuarioId={usuario.id}
+                    />
+                  ) : null}
                 </div>
               </li>
             ))}
@@ -115,7 +126,7 @@ export default async function EmpresaPage({ params }: { params: Promise<{ empres
         ) : (
           <p className="text-muted-foreground text-sm">Esta empresa aún no tiene usuarios.</p>
         )}
-        <InvitarDuenoForm empresaId={empresa.id} />
+        <AltaDuenoForm empresaId={empresa.id} telefono={empresa.contacto_telefono} />
       </section>
 
       {landings && landings.length > 0 ? (

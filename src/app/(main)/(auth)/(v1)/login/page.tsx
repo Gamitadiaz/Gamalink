@@ -7,11 +7,7 @@ import { LoginForm } from "../../_components/login-form";
 
 export const metadata: Metadata = {
   title: "Gamalink - Iniciar sesión",
-  description:
-    "Sistema CRM y de gestión de proyectos para empresas y freelancers. Administra tus clientes, proyectos y tareas de manera eficiente.",
-  alternates: {
-    canonical: "/auth/v1/login",
-  },
+  description: "Entra a tu panel de Gamalink para administrar tu negocio.",
 };
 
 export default function LoginV1() {
@@ -33,13 +29,16 @@ export default function LoginV1() {
         <div className="w-full max-w-sm space-y-8">
           <div className="space-y-2 text-center">
             <h2 className="font-bold text-2xl tracking-tight">Iniciar sesión</h2>
-            <p className="text-muted-foreground text-sm">Ingresa tu correo electrónico y contraseña.</p>
+            <p className="text-muted-foreground text-sm">Ingresa tu correo (o tu usuario) y tu contraseña.</p>
           </div>
           <LoginForm />
+          {/* El registro está oculto: las cuentas las da de alta Gamalink desde el panel de Empresas. */}
           <p className="text-center text-muted-foreground text-sm">
-            ¿No tienes una cuenta?{" "}
-            <Link prefetch={false} href="register" className="font-medium text-primary hover:underline">
-              Regístrate
+            ¿Olvidaste tu contraseña? Escríbele a Gamalink para restablecerla.
+          </p>
+          <p className="text-center text-muted-foreground text-xs">
+            <Link className="hover:underline" href="/aviso-de-privacidad" prefetch={false}>
+              Aviso de privacidad
             </Link>
           </p>
         </div>

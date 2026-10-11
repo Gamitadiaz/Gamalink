@@ -11,6 +11,7 @@ import { type ServicioRow, servicioLabel } from "@/lib/empresas";
 import { formatoDinero, formatoFecha } from "@/lib/formato";
 import { createSupabaseServerClient } from "@/lib/sb/server";
 import { getSessionContext } from "@/lib/session";
+import { usuarioDeCorreo } from "@/lib/usuarios";
 
 import { CerrarTodasLasSesiones, NombreForm, PasswordForm } from "./_components/cuenta-forms";
 
@@ -86,8 +87,8 @@ export default async function MiCuentaPage() {
         <NombreForm nombre={nombre} />
         <dl className="grid gap-3 text-sm sm:grid-cols-2">
           <div>
-            <dt className="text-muted-foreground">Correo</dt>
-            <dd className="font-medium">{user.email}</dd>
+            <dt className="text-muted-foreground">{usuarioDeCorreo(user.email) ? "Usuario" : "Correo"}</dt>
+            <dd className="font-medium">{usuarioDeCorreo(user.email) ?? user.email}</dd>
           </div>
           <div>
             <dt className="text-muted-foreground">Rol</dt>

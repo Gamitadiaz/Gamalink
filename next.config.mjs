@@ -2,7 +2,8 @@
 const nextConfig = {
   reactCompiler: true,
   compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
+    // En producción se quitan los console.log, pero se conservan error y warn para verlos en los logs de Vercel.
+    removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
   },
   async redirects() {
     return [

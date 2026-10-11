@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { cn } from "cn";
@@ -9,6 +10,7 @@ import { AppSidebar } from "@/app/(main)/dashboard/_components/sidebar/app-sideb
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { getSessionContext } from "@/lib/session";
+import { identificadorVisible } from "@/lib/usuarios";
 import { getPreference } from "@/server/server-actions";
 
 import { AccountSwitcher } from "./_components/header/account-switcher";
@@ -38,7 +40,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
       (typeof metadata.full_name === "string" && metadata.full_name) ||
       (typeof metadata.name === "string" && metadata.name) ||
       (user.email ?? "Usuario"),
-    email: user.email ?? "",
+    email: identificadorVisible(user.email),
     avatar:
       (typeof metadata.avatar_url === "string" && metadata.avatar_url) ||
       (typeof metadata.picture === "string" && metadata.picture) ||
@@ -96,6 +98,18 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
         </header>
         {/* Pages can set data-content-padding="false" to render full-bleed app layouts. */}
         <div className="min-h-0 min-w-0 flex-1 overflow-x-hidden p-4 has-data-[content-padding=false]:p-0 md:p-6 md:has-data-[content-padding=false]:p-0">
+          {metadata.debe_cambiar_contrasena === true ? (
+            <Link
+              className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm hover:bg-amber-500/15"
+              href="/dashboard/profile"
+            >
+              <span>
+                <span className="font-medium">Estás usando una contraseña temporal.</span> Cámbiala por una tuya en Mi
+                cuenta.
+              </span>
+              <span className="shrink-0 font-medium text-primary">Cambiar</span>
+            </Link>
+          ) : null}
           {children}
         </div>
       </SidebarInset>

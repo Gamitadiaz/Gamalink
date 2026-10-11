@@ -36,6 +36,7 @@ export function NombreForm({ nombre }: { nombre: string }) {
 }
 
 export function PasswordForm() {
+  const router = useRouter();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
@@ -54,7 +55,10 @@ export function PasswordForm() {
 
     setSaving(true);
     setError("");
-    const { error: updateError } = await supabase.auth.updateUser({ password });
+    const { error: updateError } = await supabase.auth.updateUser({
+      password,
+      data: { debe_cambiar_contrasena: false },
+    });
     setSaving(false);
     if (updateError) {
       setError(updateError.message);
@@ -63,6 +67,7 @@ export function PasswordForm() {
     setPassword("");
     setConfirm("");
     toast.success("Contraseña actualizada.");
+    router.refresh();
   };
 
   return (

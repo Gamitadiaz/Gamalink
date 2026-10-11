@@ -11,6 +11,7 @@ const PUBLIC_ROUTES = [
   "/plantillas/dark-purple",
   "/plantillas/orange-industrial",
   "/plantillas/warm-wood",
+  "/aviso-de-privacidad",
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {

@@ -20,12 +20,9 @@ export default function Footer() {
         </div>
         <div className="md:text-right flex flex-col md:items-end justify-center">
           <h4 className="text-white font-bold text-lg mb-4">Contacto Directo</h4>
-          <a
-            href={`mailto:info@gamlalink.online}`}
-            className="flex items-center gap-2 hover:text-white transition mb-2"
-          >
+          <a href={`mailto:${APP_CONFIG.correo}`} className="flex items-center gap-2 hover:text-white transition mb-2">
             <MailIcon className="w-5 h-5 text-[#b5c4fb]" />
-            info@gamlalink.online
+            {APP_CONFIG.correo}
           </a>
           <a
             href={`https://wa.me/${APP_CONFIG.whatsapp}?text=Hola,%20quiero%20cotizar%20un%20proyecto`}
@@ -34,13 +31,18 @@ export default function Footer() {
             className="flex items-center gap-2 hover:text-white transition text-[#96a8f7]"
           >
             <WhatsAppIcon className="w-5 h-5" />
-            +52 442 154 8842
+            {APP_CONFIG.whatsappVisible}
           </a>
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-slate-800 text-center flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
         <p>© {new Date().getFullYear()} Gamalink. Todos los derechos reservados.</p>
-        <p>Los precios mostrados incluyen impuestos aplicables.</p>
+        <p className="flex flex-wrap justify-center gap-x-4">
+          <span>Los precios mostrados incluyen impuestos aplicables.</span>
+          <a className="hover:text-white" href="/aviso-de-privacidad">
+            Aviso de privacidad
+          </a>
+        </p>
       </div>
     </footer>
   );
