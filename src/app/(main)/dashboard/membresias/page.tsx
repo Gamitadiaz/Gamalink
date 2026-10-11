@@ -6,8 +6,16 @@ import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { resolverEmpresa } from "@/lib/empresa-actual";
 import { diasEntre, formatoDinero, formatoFecha, hoyMx } from "@/lib/formato";
-import { DIAS_AVISO, ESTADO_SOCIO_CLASS, ESTADO_SOCIO_LABEL, estadoSocio, type SocioResumen } from "@/lib/membresias";
+import {
+  DIAS_AVISO,
+  ESTADO_SOCIO_CLASS,
+  ESTADO_SOCIO_LABEL,
+  estadoSocio,
+  mensajeRecordatorioSocio,
+  type SocioResumen,
+} from "@/lib/membresias";
 import { createSupabaseServerClient } from "@/lib/sb/server";
+import { whatsappUrl } from "@/lib/whatsapp";
 
 import { DineroChart } from "../_components/modulo/dinero-chart";
 import { conEmpresa, ModuloHeader, SinEmpresa } from "./_components/modulo-header";
@@ -15,15 +23,6 @@ import { conEmpresa, ModuloHeader, SinEmpresa } from "./_components/modulo-heade
 export const metadata: Metadata = { title: "Membresías" };
 
 const MESES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-
-function whatsappLink(telefono: string, nombre: string, vence: string | null) {
-  const digitos = telefono.replace(/\D/g, "");
-  const numero = digitos.length === 10 ? `52${digitos}` : digitos;
-  const mensaje = vence
-    ? `Hola ${nombre}, te recordamos que tu membresía vence el ${formatoFecha(vence)}. ¡Te esperamos!`
-    : `Hola ${nombre}, ¿te gustaría renovar tu membresía?`;
-  return `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
-}
 
 export default async function MembresiasResumenPage({ searchParams }: { searchParams: Promise<{ empresa?: string }> }) {
   const { empresa: empresaParam } = await searchParams;
@@ -143,7 +142,7 @@ export default async function MembresiasResumenPage({ searchParams }: { searchPa
                       <a
                         aria-label={`Escribir a ${socio.nombre} por WhatsApp`}
                         className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-                        href={whatsappLink(socio.telefono, socio.nombre, socio.vigente_hasta)}
+                        href={whatsappUrl(socio.telefono, mensajeRecordatorioSocio(socio.nombre, socio.vigente_hasta))}
                         rel="noreferrer"
                         target="_blank"
                       >

@@ -121,3 +121,13 @@ export function duracionCorta(minutos: number) {
   const resto = minutos % 60;
   return resto ? `${horas} h ${resto} min` : `${horas} h`;
 }
+
+export function mensajeRecordatorioCita(cita: Pick<Cita, "cliente_nombre" | "servicio_nombre" | "inicio">) {
+  const dia = new Date(cita.inicio).toLocaleDateString("es-MX", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    timeZone: "America/Mexico_City",
+  });
+  return `Hola ${cita.cliente_nombre}, te recordamos tu cita de ${cita.servicio_nombre} el ${dia} a las ${horaMx(cita.inicio)}. ¡Te esperamos!`;
+}

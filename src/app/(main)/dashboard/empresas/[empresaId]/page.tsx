@@ -29,7 +29,11 @@ export default async function EmpresaPage({ params }: { params: Promise<{ empres
 
   const supabase = await createSupabaseServerClient();
   const [{ data: empresa }, { data: servicios }, { data: usuarios }, { data: landings }] = await Promise.all([
-    supabase.from("gl_empresas").select("id, nombre_negocio, estado, created_at").eq("id", empresaId).maybeSingle(),
+    supabase
+      .from("gl_empresas")
+      .select("id, nombre_negocio, estado, contacto_telefono, created_at")
+      .eq("id", empresaId)
+      .maybeSingle(),
     supabase
       .from("gl_empresa_servicios")
       .select("servicio, estado, precio_mensual, fecha_vencimiento")
@@ -65,7 +69,12 @@ export default async function EmpresaPage({ params }: { params: Promise<{ empres
         </p>
       </header>
 
-      <EmpresaDatosForm empresaId={empresa.id} estado={empresa.estado ?? "Activo"} nombre={empresa.nombre_negocio} />
+      <EmpresaDatosForm
+        empresaId={empresa.id}
+        estado={empresa.estado ?? "Activo"}
+        nombre={empresa.nombre_negocio}
+        telefono={empresa.contacto_telefono}
+      />
 
       <section className="space-y-4 rounded-xl border bg-card p-4 md:p-6">
         <div>

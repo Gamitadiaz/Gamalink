@@ -76,7 +76,15 @@ export async function actualizarEmpresa(
     return { ok: false, message: "Estado no válido." };
   }
 
-  const { error } = await supabase.from("gl_empresas").update({ nombre_negocio: nombre, estado }).eq("id", empresaId);
+  const telefono =
+    String(formData.get("contacto_telefono") ?? "")
+      .trim()
+      .slice(0, 30) || null;
+
+  const { error } = await supabase
+    .from("gl_empresas")
+    .update({ nombre_negocio: nombre, estado, contacto_telefono: telefono })
+    .eq("id", empresaId);
   if (error) {
     return { ok: false, message: `No se pudo guardar: ${error.message}` };
   }

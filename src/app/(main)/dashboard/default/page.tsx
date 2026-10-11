@@ -1,24 +1,42 @@
+import { redirect } from "next/navigation";
+
 import type { Metadata } from "next";
 
-import { MetricCards } from "./_components/metric-cards";
-import { PerformanceOverview } from "./_components/performance-overview";
-import { SubscriberOverview } from "./_components/subscriber-overview";
+import { getSessionContext } from "@/lib/session";
+
+import { InicioNegocio } from "./_components/inicio-negocio";
+import { InicioSuperadmin } from "./_components/inicio-superadmin";
+import { Encabezado } from "./_components/ui";
 
 export const metadata: Metadata = {
-  title: "Open Source Business Dashboard with shadcn/ui",
-  description:
-    "Explore an open source admin dashboard with business metrics, customer activity, performance charts, and customer data.",
-  alternates: {
-    canonical: "/dashboard/default",
-  },
+  title: "Inicio",
 };
 
-export default function Page() {
+export default async function InicioPage() {
+  const session = await getSessionContext();
+  if (!session) redirect("/login");
+
+  const metadata = session.user.user_metadata as Record<string, unknown>;
+  const nombreCompleto =
+    (typeof metadata.full_name === "string" && metadata.full_name) || session.user.email?.split("@")[0] || "";
+  const nombre = nombreCompleto.split(" ")[0];
+
   return (
-    <div className="@container/main flex flex-col gap-4 md:gap-6">
-      <MetricCards />
-      <PerformanceOverview />
-      <SubscriberOverview />
-    </div>
+    <main className="flex flex-col gap-6 p-4 md:p-6">
+      {session.role === "superadmin" ? (
+        <>
+          <Encabezado nombre={nombre} subtitulo="Resumen de Gamalink" />
+          <InicioSuperadmin />
+        </>
+      ) : (
+        <>
+          <Encabezado
+            nombre={nombre}
+            subtitulo={session.empresas.length === 1 ? session.empresas[0].nombre : undefined}
+          />
+          <InicioNegocio empresas={session.empresas} />
+        </>
+      )}
+    </main>
   );
 }

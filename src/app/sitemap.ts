@@ -1,33 +1,16 @@
 import type { MetadataRoute } from "next";
 
-const SITE_URL = "https://studio-admin.arhamkhnz.com";
+const SITE_URL = "https://gamalink.online";
 
+// Solo páginas públicas de Gamalink. El panel (/dashboard) requiere sesión y no se anuncia.
 const PUBLIC_ROUTES = [
-  "/",
-  "/dashboard/default",
-  "/dashboard/crm",
-  "/dashboard/finance",
-  "/dashboard/analytics",
-  "/dashboard/productivity",
-  "/dashboard/ecommerce",
-  "/dashboard/academy",
-  "/dashboard/logistics",
-  "/dashboard/infrastructure",
-  "/dashboard/file-manager",
-  "/dashboard/patient-monitoring",
-  "/dashboard/calendar",
-  "/dashboard/kanban",
-  "/dashboard/tasks",
-  "/dashboard/invoice",
-  "/dashboard/profile",
-  "/dashboard/users",
-  "/dashboard/roles",
-  "/auth/v1/login",
-  "/auth/v2/login",
-  "/auth/v1/register",
-  "/auth/v2/register",
-  "/chat",
-  "/mail",
+  "/precios",
+  "/plantillas",
+  "/plantillas/bold-red",
+  "/plantillas/clean-white",
+  "/plantillas/dark-purple",
+  "/plantillas/orange-industrial",
+  "/plantillas/warm-wood",
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {

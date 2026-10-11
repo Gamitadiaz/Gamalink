@@ -50,6 +50,12 @@ Superadmin (dueño de Gamalink) ── ve y administra todo
 
 Panel del superadmin: empresas, servicios contratados, cobranza (`gl_cobros`), usuarios.
 
+**Inicio** (`/dashboard/default`): para cada negocio, pendientes del día y una tarjeta por servicio
+contratado; para el superadmin, ingreso mensual, cobranza próxima y servicios por tipo.
+
+**Referencias** (menú Desarrollo → Referencias, solo superadmin): las demos de la plantilla sin
+funcionalidad real. Se usan como base visual al construir un módulo nuevo; no se muestran a clientes.
+
 ## Tablas antiguas (a migrar)
 
 | Tabla | Destino |

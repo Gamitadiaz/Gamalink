@@ -16,10 +16,11 @@ import {
   DIAS_SEMANA,
   duracionCorta,
   type EstadoCita,
-  horaMx,
+  mensajeRecordatorioCita,
   type ServicioAgenda,
 } from "@/lib/citas";
 import { formatoDinero, formatoFecha, hoyMx } from "@/lib/formato";
+import { whatsappUrl } from "@/lib/whatsapp";
 import {
   cambiarEstadoCita,
   cambiarEstadoServicioAgenda,
@@ -164,19 +165,6 @@ export function NuevaCitaForm({
 
 // ---------- Acciones de una cita ----------
 
-function whatsappRecordatorio(cita: Cita) {
-  const digitos = (cita.cliente_telefono ?? "").replace(/\D/g, "");
-  const numero = digitos.length === 10 ? `52${digitos}` : digitos;
-  const dia = new Date(cita.inicio).toLocaleDateString("es-MX", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    timeZone: "America/Mexico_City",
-  });
-  const mensaje = `Hola ${cita.cliente_nombre}, te recordamos tu cita de ${cita.servicio_nombre} el ${dia} a las ${horaMx(cita.inicio)}. ¡Te esperamos!`;
-  return `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
-}
-
 export function CitaAcciones({ empresaId, cita }: { empresaId: number; cita: Cita }) {
   const [pending, startTransition] = useTransition();
   const [confirmandoCancelar, setConfirmandoCancelar] = useState(false);
@@ -212,7 +200,7 @@ export function CitaAcciones({ empresaId, cita }: { empresaId: number; cita: Cit
         <a
           aria-label={`Recordar a ${cita.cliente_nombre} por WhatsApp`}
           className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-          href={whatsappRecordatorio(cita)}
+          href={whatsappUrl(cita.cliente_telefono, mensajeRecordatorioCita(cita))}
           rel="noreferrer"
           target="_blank"
         >

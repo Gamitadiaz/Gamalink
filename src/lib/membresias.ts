@@ -1,4 +1,4 @@
-import { diasEntre } from "@/lib/formato";
+import { diasEntre, formatoFecha } from "@/lib/formato";
 
 export const METODOS_PAGO = [
   { key: "efectivo", label: "Efectivo" },
@@ -71,4 +71,10 @@ export function duracionLabel(dias: number) {
   if (dias % 365 === 0) return dias === 365 ? "1 año" : `${dias / 365} años`;
   if (dias % 30 === 0) return dias === 30 ? "1 mes" : `${dias / 30} meses`;
   return `${dias} días`;
+}
+
+export function mensajeRecordatorioSocio(nombre: string, vence: string | null) {
+  return vence
+    ? `Hola ${nombre}, te recordamos que tu membresía vence el ${formatoFecha(vence)}. ¡Te esperamos!`
+    : `Hola ${nombre}, ¿te gustaría renovar tu membresía?`;
 }

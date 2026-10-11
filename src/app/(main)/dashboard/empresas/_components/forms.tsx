@@ -73,16 +73,37 @@ export function NuevaEmpresaForm() {
   );
 }
 
-export function EmpresaDatosForm({ empresaId, nombre, estado }: { empresaId: number; nombre: string; estado: string }) {
+export function EmpresaDatosForm({
+  empresaId,
+  nombre,
+  estado,
+  telefono,
+}: {
+  empresaId: number;
+  nombre: string;
+  estado: string;
+  telefono: string | null;
+}) {
   const [state, action, pending] = useActionState(actualizarEmpresa.bind(null, empresaId), null);
 
   return (
     <form action={action} className="space-y-4 rounded-xl border bg-card p-4 md:p-6">
       <h2 className="font-semibold text-lg">Datos</h2>
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-3">
         <div className="space-y-2">
           <Label htmlFor="empresa-nombre">Nombre del negocio</Label>
           <Input defaultValue={nombre} id="empresa-nombre" maxLength={120} name="nombre" required />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="empresa-telefono">WhatsApp de contacto</Label>
+          <Input
+            defaultValue={telefono ?? ""}
+            id="empresa-telefono"
+            maxLength={30}
+            name="contacto_telefono"
+            placeholder="442 123 4567"
+            type="tel"
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="empresa-estado">Estado</Label>
