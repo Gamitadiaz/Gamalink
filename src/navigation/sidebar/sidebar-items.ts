@@ -2,6 +2,7 @@ import {
   Banknote,
   Building2,
   Calendar,
+  CalendarClock,
   ChartBar,
   CheckSquare,
   Dumbbell,
@@ -112,6 +113,12 @@ export const sidebarItems: NavGroup[] = [
         title: "Tiendita",
         url: "/dashboard/tienda",
         icon: Store,
+      },
+      {
+        id: "citas",
+        title: "Citas",
+        url: "/dashboard/citas",
+        icon: CalendarClock,
       },
       {
         id: "profile",

@@ -24,7 +24,7 @@ const COMMON_ROUTES = ["/dashboard/default", "/dashboard/profile"];
 const SERVICE_ROUTES: Record<Servicio, string[]> = {
   landing: ["/dashboard/configuration", "/dashboard/landing-analytics"],
   membresias: ["/dashboard/membresias"],
-  citas: [],
+  citas: ["/dashboard/citas"],
   tienda: ["/dashboard/tienda"],
 };
 
