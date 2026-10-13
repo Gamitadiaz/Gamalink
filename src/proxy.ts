@@ -62,20 +62,8 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL(user ? "/dashboard" : "/login", request.url));
   }
 
-  const publicRoutes = [
-    "/login",
-    "/plantillas",
-    "/precios",
-    "/preview",
-    "/auth",
-    "/aviso-de-privacidad",
-    "/terminos-y-condiciones",
-    "/",
-  ];
-
-  const isPublicRoute = publicRoutes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
-
-  if (!user && !isPublicRoute) {
+  // Solo el panel pide sesión. Lo demás es público, y una dirección que no existe muestra la página 404.
+  if (!user && isProtectedAppRoute(pathname)) {
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
   }
