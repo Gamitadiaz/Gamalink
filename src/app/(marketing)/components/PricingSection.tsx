@@ -68,8 +68,8 @@ export default function PricingSection() {
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">Gestión Digital</h3>
             <p className="text-[#e2e8f0] mb-6 text-sm">
-              Sistema base para administrar tu negocio local sin descapitalizarte. La inversión en desarrollo va por mi
-              cuenta.
+              Sistema base para administrar tu negocio local sin descapitalizarte. La inversión en desarrollo va por
+              nuestra cuenta.
             </p>
 
             <div className="mb-6 pb-6 border-b border-[#5a67c5]">

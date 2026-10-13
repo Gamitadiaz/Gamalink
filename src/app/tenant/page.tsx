@@ -1,4 +1,8 @@
+import { cache } from "react";
+
 import { notFound } from "next/navigation";
+
+import type { Metadata } from "next";
 
 import BoldRedTemplate from "@/app/(marketing)/plantillas/bold-red/page";
 import CleanWhiteTemplate from "@/app/(marketing)/plantillas/clean-white/page";
@@ -22,8 +26,8 @@ const templateLabels = {
   "warm-wood": "Warm Wood",
 } as const;
 
-export default async function TenantLandingPage({ searchParams }: TenantPageProps) {
-  const { host: requestedHost } = await searchParams;
+// Una sola consulta por visita: la comparten generateMetadata y la página.
+const getLanding = cache(async (requestedHost: string | undefined) => {
   const host = requestedHost?.toLowerCase().replace(/\.$/, "");
 
   if (!host || !/^[a-z0-9.-]{1,253}$/.test(host)) {
@@ -37,6 +41,10 @@ export default async function TenantLandingPage({ searchParams }: TenantPageProp
     notFound();
   }
 
+  // Un dominio propio debe abrir igual con y sin "www.", sin importar cómo se haya guardado.
+  const bareHost = host.replace(/^www\./, "");
+  const domainVariants = [bareHost, `www.${bareHost}`];
+
   const supabase = createLandingReadClient();
   const query = supabase
     .from("gl_landings")
@@ -45,7 +53,7 @@ export default async function TenantLandingPage({ searchParams }: TenantPageProp
     .limit(1);
   const { data: landing, error } = slug
     ? await query.eq("slug", slug).maybeSingle()
-    : await query.eq("custom_domain", host).maybeSingle();
+    : await query.in("custom_domain", domainVariants).maybeSingle();
 
   if (error) {
     throw new Error(`No se pudo cargar la landing para ${host}: ${error.message}`);
@@ -54,6 +62,48 @@ export default async function TenantLandingPage({ searchParams }: TenantPageProp
   if (!landing || !isLandingTemplateKey(landing.template_key)) {
     notFound();
   }
+
+  return { host, isTrialSubdomain: slug !== null, landing: { ...landing, template_key: landing.template_key } };
+});
+
+function contentText(content: unknown, field: string) {
+  const value = content && typeof content === "object" ? (content as Record<string, unknown>)[field] : undefined;
+  return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
+// Al compartir la página de un cliente se ve su negocio, no Gamalink.
+export async function generateMetadata({ searchParams }: TenantPageProps): Promise<Metadata> {
+  const { host: requestedHost } = await searchParams;
+  const { host, isTrialSubdomain, landing } = await getLanding(requestedHost);
+  const { content } = landing;
+
+  const nombre = contentText(content, "nombre") ?? "Mi negocio";
+  const tipo = contentText(content, "tipo");
+  const title = tipo ? `${nombre} | ${tipo}` : nombre;
+  const description =
+    contentText(content, "descripcion") ?? contentText(content, "subtitulo") ?? contentText(content, "slogan");
+  const imagenes = content && typeof content === "object" ? (content as Record<string, unknown>).imagenes : undefined;
+  const image = Array.isArray(imagenes)
+    ? imagenes.find((url) => typeof url === "string" && url.startsWith("https://"))
+    : undefined;
+  const images = image ? [{ url: image as string, alt: nombre }] : [];
+
+  return {
+    metadataBase: new URL(`https://${host}`),
+    title: { absolute: title },
+    description,
+    applicationName: nombre,
+    alternates: { canonical: "/" },
+    // Los subdominios de gamalink.online son pruebas gratuitas: no deben aparecer en Google.
+    robots: isTrialSubdomain ? { index: false, follow: false } : undefined,
+    openGraph: { type: "website", locale: "es_MX", siteName: nombre, title, description, url: "/", images },
+    twitter: { card: image ? "summary_large_image" : "summary", title, description, images },
+  };
+}
+
+export default async function TenantLandingPage({ searchParams }: TenantPageProps) {
+  const { host: requestedHost } = await searchParams;
+  const { landing } = await getLanding(requestedHost);
 
   switch (landing.template_key) {
     case "bold-red":

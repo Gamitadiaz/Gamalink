@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const SITE_URL = "https://gamalink.online";
+import { SITE_URL } from "@/lib/seo";
 
 // Solo páginas públicas de Gamalink. El panel (/dashboard) requiere sesión y no se anuncia.
 const PUBLIC_ROUTES = [
@@ -12,6 +12,7 @@ const PUBLIC_ROUTES = [
   "/plantillas/orange-industrial",
   "/plantillas/warm-wood",
   "/aviso-de-privacidad",
+  "/terminos-y-condiciones",
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {

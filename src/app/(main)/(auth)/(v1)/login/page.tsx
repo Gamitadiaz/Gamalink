@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import { LoginForm } from "../../_components/login-form";
 
 export const metadata: Metadata = {
-  title: "Gamalink - Iniciar sesión",
+  title: "Iniciar sesión",
   description: "Entra a tu panel de Gamalink para administrar tu negocio.",
 };
 

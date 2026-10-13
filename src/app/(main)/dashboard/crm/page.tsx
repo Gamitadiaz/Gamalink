@@ -6,7 +6,7 @@ import { PipelineActivity } from "./_components/pipeline-activity";
 import { TaskReminders } from "./_components/task-reminders";
 
 export const metadata: Metadata = {
-  title: "SaaS Gamalink - CRM Dashboard",
+  title: "CRM",
 };
 
 export default function Page() {

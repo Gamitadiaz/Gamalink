@@ -7,21 +7,21 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { APP_CONFIG } from "@/config/app-config";
 import { fontVars } from "@/lib/fonts/registry";
 import { PREFERENCE_DEFAULTS } from "@/lib/preferences/preferences-config";
+import { BASE_OPEN_GRAPH, SITE_URL } from "@/lib/seo";
 import { ThemeBootScript } from "@/scripts/theme-boot";
 import { PreferencesStoreProvider } from "@/stores/preferences/preferences-provider";
 
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://gamalink.online"),
-  title: APP_CONFIG.meta.title,
+  metadataBase: new URL(SITE_URL),
+  // Las páginas definen solo su título ("Citas") y aquí se completa: "Citas | Gamalink".
+  title: { default: APP_CONFIG.meta.title, template: `%s | ${APP_CONFIG.name}` },
   description: APP_CONFIG.meta.description,
   applicationName: APP_CONFIG.name,
   // La imagen de vista previa sale de opengraph-image.png y twitter-image.png en esta carpeta.
   openGraph: {
-    type: "website",
-    locale: "es_MX",
-    siteName: APP_CONFIG.name,
+    ...BASE_OPEN_GRAPH,
     title: APP_CONFIG.meta.title,
     description: APP_CONFIG.meta.description,
   },

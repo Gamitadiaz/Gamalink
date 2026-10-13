@@ -39,6 +39,9 @@ export default function Footer() {
         <p>© {new Date().getFullYear()} Gamalink. Todos los derechos reservados.</p>
         <p className="flex flex-wrap justify-center gap-x-4">
           <span>Los precios mostrados incluyen impuestos aplicables.</span>
+          <a className="hover:text-white" href="/terminos-y-condiciones">
+            Términos y condiciones
+          </a>
           <a className="hover:text-white" href="/aviso-de-privacidad">
             Aviso de privacidad
           </a>

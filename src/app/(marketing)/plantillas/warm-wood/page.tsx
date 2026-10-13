@@ -9,7 +9,7 @@ const DEMO_NEGOCIO: LandingContentByTemplate["warm-wood"] = {
   tipo: "Barbería de Autor",
   slogan: "El corte perfecto no es casualidad",
   descripcion: "Tradición barbera con técnica contemporánea. Cada servicio es una experiencia, cada corte una obra.",
-  whatsapp: "4428367627",
+  whatsapp: "524428367627",
   instagram: "lanajabarber",
   direccion: "Andador Hidalgo 14, Centro, Querétaro",
   maps_embed: "https://maps.google.com/maps?q=queretaro&output=embed",
@@ -358,7 +358,18 @@ export default function WarmWoodTemplate({
         <p className="font-body text-[#5a3e28] text-xs">
           © {new Date().getFullYear()} {NEGOCIO.nombre}. Todos los derechos reservados.
         </p>
-        <p className="font-body text-[#3a2a1a] text-xs mt-2">Desarrollado por GDA.</p>
+        <p className="font-body text-[#3a2a1a] text-xs mt-2">
+          Desarrollado por{" "}
+          <a
+            href="https://gamalink.online"
+            target="_blank"
+            rel="noopener"
+            className="underline underline-offset-2 hover:opacity-80"
+          >
+            Gamalink
+          </a>
+          .
+        </p>
       </footer>
     </div>
   );

@@ -3,20 +3,22 @@ import type { Metadata } from "next";
 import Footer from "@/app/(marketing)/components/Footer";
 import Navbar from "@/app/(marketing)/components/Navbar";
 import { APP_CONFIG } from "@/config/app-config";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Aviso de privacidad · Gamalink",
+export const metadata: Metadata = pageMetadata({
+  title: "Aviso de privacidad",
   description: "Cómo Gamalink trata los datos personales de sus clientes y de los visitantes de sus páginas.",
-};
+  path: "/aviso-de-privacidad",
+});
 
 // BORRADOR basado en la LFPDPPP (México). Antes de considerarlo definitivo:
 //   1. Completa RESPONSABLE (nombre legal y domicilio).
 //   2. Pide que lo revise un abogado o especialista en protección de datos.
 const RESPONSABLE = {
   nombre: "Gamaliel Diaz Alegría",
-  domicilio: "Independencia 12, El Garruñal Huimilpan, 76984, Queretaro, México",
+  domicilio: "Independencia 12, El Garruñal Huimilpan, 76984, Querétaro, México",
 };
-const ULTIMA_ACTUALIZACION = "11 de octubre de 2026";
+const ULTIMA_ACTUALIZACION = "13 de octubre de 2026";
 
 function Seccion({ titulo, children }: { titulo: string; children: React.ReactNode }) {
   return (
@@ -65,6 +67,11 @@ export default function AvisoDePrivacidad() {
             <strong>De quienes visitan las páginas web</strong> que alojamos: un identificador anónimo guardado en una
             cookie, la página visitada, el sitio de procedencia y los clics en botones de contacto. Con esto no
             identificamos a la persona.
+          </p>
+          <p>
+            <strong>De quienes visitan gamalink.online</strong>: estadísticas anónimas de visitas (página vista, sitio
+            de procedencia, país, tipo de dispositivo y clics en el botón de WhatsApp), medidas con Vercel Web Analytics
+            sin usar cookies.
           </p>
           <p>No recabamos datos personales sensibles ni datos financieros como números de tarjeta.</p>
         </Seccion>

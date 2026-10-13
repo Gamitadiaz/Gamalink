@@ -62,7 +62,16 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL(user ? "/dashboard" : "/login", request.url));
   }
 
-  const publicRoutes = ["/login", "/plantillas", "/precios", "/preview", "/auth", "/aviso-de-privacidad", "/"];
+  const publicRoutes = [
+    "/login",
+    "/plantillas",
+    "/precios",
+    "/preview",
+    "/auth",
+    "/aviso-de-privacidad",
+    "/terminos-y-condiciones",
+    "/",
+  ];
 
   const isPublicRoute = publicRoutes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
 
@@ -95,5 +104,6 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
+  // robots.txt y sitemap.xml quedan fuera para que Google los lea sin sesión.
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
 };

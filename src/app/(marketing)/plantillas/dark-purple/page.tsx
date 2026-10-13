@@ -9,7 +9,7 @@ const DEMO_NEGOCIO: LandingContentByTemplate["dark-purple"] = {
   tipo: "Gimnasio & Fitness",
   slogan: "Forja tu cuerpo",
   subtitulo: "Pesas, cardio y entrenamiento funcional en el mejor ambiente.",
-  whatsapp: "524421103306",
+  whatsapp: "524428367627",
   instagram: "pulsarforgegym",
   direccion: "Río Nilo 3-Bodega 4, 76922 Arroyo Hondo, Qro.",
   maps_embed: "https://maps.google.com/maps?q=Arroyo+Hondo+Queretaro&output=embed",
@@ -298,7 +298,18 @@ export default function DarkPurpleTemplate({
         <p className="text-zinc-600 text-sm">
           © {new Date().getFullYear()} {NEGOCIO.nombre}.
         </p>
-        <p className="text-zinc-700 text-xs mt-1">Desarrollado por GDA.</p>
+        <p className="text-zinc-700 text-xs mt-1">
+          Desarrollado por{" "}
+          <a
+            href="https://gamalink.online"
+            target="_blank"
+            rel="noopener"
+            className="underline underline-offset-2 hover:opacity-80"
+          >
+            Gamalink
+          </a>
+          .
+        </p>
       </footer>
     </div>
   );

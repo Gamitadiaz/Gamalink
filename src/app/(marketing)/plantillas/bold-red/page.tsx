@@ -68,7 +68,7 @@ export default function BoldRedTemplate({ empresaId, landingId, business = DEMO_
 
   return (
     <div
-      className="min-h-screen·bg-[#0f0a0a]·text-white"
+      className="min-h-screen bg-[#0f0a0a] text-white"
       style={{ fontFamily: "'Barlow Condensed', 'Arial Narrow', sans-serif" }}
     >
       <style>{`
@@ -111,16 +111,16 @@ export default function BoldRedTemplate({ empresaId, landingId, business = DEMO_
       `}</style>
 
       {/* ── NAV ── */}
-      <nav className="sticky·top-0·z-50·border-red-brand·border-b-2·bg-[#0f0a0a]/95·backdrop-blur-sm">
-        <div className="mx-auto·flex·max-w-5xl·items-center·justify-between·px-4·py-3">
+      <nav className="sticky top-0 z-50 border-red-brand border-b-2 bg-[#0f0a0a]/95 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <div className="font-condensed">
-            <span className="font-black·text-2xl·text-white·tracking-tight">{NEGOCIO.nombre}</span>
-            <span className="ml-3·hidden·font-bold·text-red-brand·text-sm·uppercase·tracking-widest·md:inline">
+            <span className="font-black text-2xl text-white tracking-tight">{NEGOCIO.nombre}</span>
+            <span className="ml-3 hidden font-bold text-red-brand text-sm uppercase tracking-widest md:inline">
               — {NEGOCIO.tipo}
             </span>
           </div>
-          <div className="hidden·items-center·gap-8·font-bold·font-condensed·text-sm·text-zinc-400·uppercase·tracking-widest·md:flex">
-            <a href="#menu" className="transition·hover:text-red-brand">
+          <div className="hidden items-center gap-8 font-bold font-condensed text-sm text-zinc-400 uppercase tracking-widest md:flex">
+            <a href="#menu" className="transition hover:text-red-brand">
               Menú
             </a>
             <a href="#ubicacion" className="transition hover:text-red-brand">
@@ -347,7 +347,16 @@ export default function BoldRedTemplate({ empresaId, landingId, business = DEMO_
         <p className="mb-1 font-black font-condensed text-2xl text-white uppercase tracking-widest">{NEGOCIO.nombre}</p>
         <p className="mb-4 font-condensed text-red-brand text-xs uppercase tracking-widest">{NEGOCIO.tipo}</p>
         <p className="font-body-reg text-xs text-zinc-600">
-          © {new Date().getFullYear()} {NEGOCIO.nombre} · Desarrollado por GDA.
+          © {new Date().getFullYear()} {NEGOCIO.nombre} · Desarrollado por{" "}
+          <a
+            href="https://gamalink.online"
+            target="_blank"
+            rel="noopener"
+            className="underline underline-offset-2 hover:opacity-80"
+          >
+            Gamalink
+          </a>
+          .
         </p>
       </footer>
     </div>

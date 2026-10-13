@@ -268,7 +268,16 @@ export default function OrangeIndustrialTemplate({
           © {new Date().getFullYear()} {NEGOCIO.nombre}. {NEGOCIO.ciudad}
         </p>
         <div className="mt-4 inline-block bg-zinc-900 px-4 py-2 text-xs text-zinc-600 uppercase tracking-widest">
-          Desarrollado por GDA.
+          Desarrollado por{" "}
+          <a
+            href="https://gamalink.online"
+            target="_blank"
+            rel="noopener"
+            className="underline underline-offset-2 hover:opacity-80"
+          >
+            Gamalink
+          </a>
+          .
         </div>
       </footer>
     </div>

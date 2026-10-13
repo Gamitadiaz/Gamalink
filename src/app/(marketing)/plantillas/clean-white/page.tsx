@@ -10,7 +10,7 @@ const DEMO_NEGOCIO: LandingContentByTemplate["clean-white"] = {
   slogan: "Belleza que habla por sí sola",
   descripcion:
     "Un espacio dedicado a realzar tu mejor versión. Servicios profesionales en un ambiente tranquilo y sofisticado.",
-  whatsapp: "52442836727",
+  whatsapp: "524428367627",
   instagram: "studioblanc",
   telefono: "442 100 0000",
   direccion: "Av. Constituyentes 88, Querétaro",
@@ -316,7 +316,16 @@ export default function CleanWhiteTemplate({
             <p className="text-xs text-gray-400 mt-0.5">{NEGOCIO.tipo}</p>
           </div>
           <p className="text-xs text-gray-400">
-            © {new Date().getFullYear()} {NEGOCIO.nombre} · Desarrollado por GDA.
+            © {new Date().getFullYear()} {NEGOCIO.nombre} · Desarrollado por{" "}
+            <a
+              href="https://gamalink.online"
+              target="_blank"
+              rel="noopener"
+              className="underline underline-offset-2 hover:opacity-80"
+            >
+              Gamalink
+            </a>
+            .
           </p>
         </div>
       </footer>
