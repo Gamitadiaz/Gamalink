@@ -24,6 +24,13 @@ export default function Navbar() {
                 {link.label}
               </a>
             ))}
+            {/* Discreto a propósito: el botón principal es "Cotizar Proyecto". En celular está en el pie de página. */}
+            <a
+              href="/login"
+              className="hidden md:block text-sm font-medium text-slate-500 hover:text-[#404a9d] transition-colors"
+            >
+              Acceso clientes
+            </a>
             <a
               href={`https://wa.me/${APP_CONFIG.whatsapp}?text=Hola,%20quiero%20cotizar%20un%20proyecto`}
               target="_blank"

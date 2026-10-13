@@ -33,6 +33,9 @@ export default function Footer() {
             <WhatsAppIcon className="w-5 h-5" />
             {APP_CONFIG.whatsappVisible}
           </a>
+          <a href="/login" className="mt-6 text-sm text-slate-400 hover:text-white transition">
+            ¿Ya eres cliente? <span className="font-semibold underline underline-offset-2">Acceso clientes</span>
+          </a>
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-slate-800 text-center flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
