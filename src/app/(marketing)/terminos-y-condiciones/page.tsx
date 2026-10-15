@@ -43,15 +43,16 @@ export default function TerminosYCondiciones() {
           (en adelante, &quot;Gamalink&quot;), presta servicios de páginas web, software y sistemas de gestión a sus
           clientes (en adelante, &quot;el Cliente&quot;). <strong>Realizar el pago inicial</strong> (anticipo o primera
           mensualidad) <strong>significa que el Cliente acepta estos términos.</strong> Los precios publicados incluyen
-          IVA, excepto los del plan A la Medida, que se indican como &quot;+ IVA&quot; y a los que se suma el IVA vigente.
+          IVA, excepto los del plan A la Medida, que se indican como &quot;+ IVA&quot; y a los que se suma el IVA
+          vigente.
         </p>
 
         <Seccion titulo="1. Pagos, entregas y cancelaciones">
           <p>
-            <strong>Pago inicial.</strong> En los planes con costo de instalación (Página Web y A la
-            Medida), el desarrollo inicia tras el pago de un <strong>anticipo del 50%, no reembolsable</strong>.
-            El 50% restante se paga contra entrega. En el plan Página + Sistema (instalación $0), el desarrollo inicia
-            con el pago por adelantado de la primera mensualidad.
+            <strong>Pago inicial.</strong> En los planes con costo de instalación (Página Web y A la Medida), el
+            desarrollo inicia tras el pago de un <strong>anticipo del 50%, no reembolsable</strong>. El 50% restante se
+            paga contra entrega. En los sistemas Membresías, Citas y Tienda (instalación $0), el desarrollo inicia con
+            el pago por adelantado de la primera mensualidad.
           </p>
           <p>
             <strong>Cancelación del proyecto.</strong> Si el Cliente cancela una vez iniciado el desarrollo, el anticipo
@@ -67,10 +68,25 @@ export default function TerminosYCondiciones() {
             desde el día en que el Cliente entrega todo el material necesario: logotipos, imágenes, textos y precios.
           </p>
           <p>
-            <strong>Plazo mínimo del plan Página + Sistema.</strong> Para conservar la instalación a $0, este plan
-            requiere un compromiso mínimo de <strong>6 meses</strong>. Si el Cliente cancela antes, deberá cubrir una
-            tarifa de recuperación de instalación de <strong>$2,500 MXN</strong>. Después del sexto mes, el servicio es
-            mes a mes y puede cancelarse sin penalización.
+            <strong>Plazo mínimo de los sistemas Membresías, Citas y Tienda.</strong> Para conservar la instalación a
+            $0, estos sistemas requieren un compromiso mínimo:
+          </p>
+          <ul className="list-disc space-y-1 pl-6">
+            <li>
+              <strong>3 meses</strong> si el Cliente contrata solo Tienda (con o sin Página Web agregada).
+            </li>
+            <li>
+              <strong>6 meses</strong> si contrata Membresías o Citas, solos o combinados con otros sistemas. Cuando una
+              combinación incluye sistemas con plazos distintos, aplica el más largo.
+            </li>
+          </ul>
+          <p>
+            Si el Cliente cancela antes de cumplir el plazo mínimo, deberá cubrir una tarifa de recuperación de
+            instalación equivalente al <strong>50% de las mensualidades que falten</strong> para completarlo, calculadas
+            con la mensualidad vigente al momento de cancelar. Por ejemplo, si cancela Membresías ($900 al mes) después
+            del primer mes, faltan 5 mensualidades y la tarifa es de $2,250 MXN. Agregar sistemas durante el plazo no lo
+            reinicia. El pago anual cubre el plazo mínimo. Una vez cumplido, el servicio es mes a mes y puede cancelarse
+            sin penalización. La Página Web contratada sola no tiene plazo mínimo.
           </p>
         </Seccion>
 
@@ -119,8 +135,9 @@ export default function TerminosYCondiciones() {
           <ul className="list-disc space-y-1 pl-6">
             <li>Nuevas secciones en la página web: desde $300 MXN.</li>
             <li>
-              Módulos adicionales ya disponibles en la plataforma (Membresías, Citas o Tienda): $350 MXN al mes cada
-              uno, sin costo de instalación.
+              Sistemas adicionales (Membresías, Citas, Tienda o la Página Web agregada a la Tienda): $350 MXN al mes
+              cada uno, sin costo de instalación. Al combinar sistemas, se cobra completo el de mayor precio y $350 MXN
+              por cada adicional.
             </li>
             <li>Funciones nuevas desarrolladas a la medida en el panel administrativo: desde $1,000 MXN.</li>
           </ul>
@@ -140,12 +157,12 @@ export default function TerminosYCondiciones() {
 
         <Seccion titulo="5. Propiedad del software y dominios">
           <p>
-            <strong>Plan Página + Sistema:</strong> el código, la base de datos y la arquitectura de la plataforma son
-            propiedad de Gamalink. El Cliente paga una suscripción por la licencia de uso.
+            <strong>Sistemas Membresías, Citas y Tienda:</strong> el código, la base de datos y la arquitectura de la
+            plataforma son propiedad de Gamalink. El Cliente paga una suscripción por la licencia de uso.
           </p>
           <p>
-            <strong>Plan A la Medida:</strong> el Cliente es dueño de su copia de la plataforma desarrollada a
-            la medida, y Gamalink conserva el derecho de reutilizar la tecnología base.
+            <strong>Plan A la Medida:</strong> el Cliente es dueño de su copia de la plataforma desarrollada a la
+            medida, y Gamalink conserva el derecho de reutilizar la tecnología base.
           </p>
           <p>
             <strong>Dominios:</strong> los planes incluyen el registro de dominios <strong>.com</strong> o{" "}

@@ -10,7 +10,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Planes y precios",
   description:
-    "Página web editable desde $2,500 MXN, o tu página más un sistema de membresías, citas o tienda con instalación gratis desde $900 al mes. Hospedaje, dominio y soporte incluidos.",
+    "Página web para tu negocio, sistema de membresías para gimnasios, agenda de citas y punto de venta para tiendas. Instalación gratis en los sistemas, desde $500 al mes. Hospedaje, dominio y soporte incluidos.",
   path: "/precios",
 });
 

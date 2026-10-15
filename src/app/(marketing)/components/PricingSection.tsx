@@ -7,6 +7,100 @@ import { CheckIcon } from "./Icons";
 const MENSUAL_ACTIVO = "group-has-[#periodo-anual:checked]:hidden";
 const ANUAL_ACTIVO = "hidden group-has-[#periodo-anual:checked]:inline-block";
 
+function whatsapp(texto: string) {
+  return `https://wa.me/${APP_CONFIG.whatsapp}?text=${encodeURIComponent(texto)}`;
+}
+
+type Producto = {
+  nombre: string;
+  para: string;
+  instalacion: string;
+  // Meses mínimos a cambio de la instalación gratis (ver términos).
+  plazoMinimo?: number;
+  mensual: string;
+  anual: string;
+  totalAnual: string;
+  funciones: string[];
+  extra: string;
+  cta: { texto: string; href: string; externo: boolean };
+};
+
+// Pago anual: 12 meses por el precio de 10.
+const PRODUCTOS: Producto[] = [
+  {
+    nombre: "Página Web",
+    para: "Para cualquier negocio que quiere aparecer en Google y recibir clientes por WhatsApp.",
+    instalacion: "$2,500",
+    mensual: "$400",
+    anual: "$333",
+    totalAnual: "$4,000 al año · ahorras $800",
+    funciones: [
+      "Diseño de nuestro catálogo, con tus fotos y colores",
+      "Tú editas textos e imágenes cuando quieras",
+      "Métricas de visitas",
+      "Botón directo a tu WhatsApp",
+      "Alta en Google Maps",
+      "Hospedaje, dominio y SSL incluidos",
+    ],
+    extra: "Agrega cualquier sistema por +$350/mes.",
+    cta: { texto: "Ver plantillas", href: "/plantillas", externo: false },
+  },
+  {
+    nombre: "Membresías",
+    para: "Gimnasios, estudios de yoga, box, academias y clubes.",
+    instalacion: "$0",
+    plazoMinimo: 6,
+    mensual: "$900",
+    anual: "$750",
+    totalAnual: "$9,000 al año · ahorras $1,800",
+    funciones: [
+      "Socios y planes de membresía",
+      "Registro de pagos e ingresos",
+      "Quién vence y cuándo",
+      "Tus datos en la nube, desde la compu o el celular",
+      "Incluye tu Página Web",
+    ],
+    extra: "Agrega otro sistema por +$350/mes.",
+    cta: { texto: "Agendar demo", href: whatsapp("Hola, me interesa el sistema de Membresías"), externo: true },
+  },
+  {
+    nombre: "Citas",
+    para: "Barberías, salones, spas, consultorios y talleres.",
+    instalacion: "$0",
+    plazoMinimo: 6,
+    mensual: "$900",
+    anual: "$750",
+    totalAnual: "$9,000 al año · ahorras $1,800",
+    funciones: [
+      "Agenda semanal",
+      "Servicios con duración y capacidad",
+      "Tu horario de atención",
+      "Recordatorios por WhatsApp con un clic",
+      "Incluye tu Página Web",
+    ],
+    extra: "Agrega otro sistema por +$350/mes.",
+    cta: { texto: "Agendar demo", href: whatsapp("Hola, me interesa el sistema de Citas"), externo: true },
+  },
+  {
+    nombre: "Tienda",
+    para: "Abarrotes, papelerías, boutiques y tiendas de barrio.",
+    instalacion: "$0",
+    plazoMinimo: 3,
+    mensual: "$500",
+    anual: "$417",
+    totalAnual: "$5,000 al año · ahorras $1,000",
+    funciones: [
+      "Punto de venta",
+      "Productos e inventario con historial",
+      "Ventas y ganancia del día",
+      "Cancelación de ventas",
+      "Tus datos en la nube, desde la compu o el celular",
+    ],
+    extra: "¿Quieres tu Página Web? +$350/mes.",
+    cta: { texto: "Agendar demo", href: whatsapp("Hola, me interesa el sistema de Tienda"), externo: true },
+  },
+];
+
 function Precio({ mensual, anual }: { mensual: string; anual: string }) {
   return (
     <>
@@ -16,27 +110,68 @@ function Precio({ mensual, anual }: { mensual: string; anual: string }) {
   );
 }
 
-function DetalleAnual({ children, className }: { children: string; className: string }) {
+function DetalleAnual({ children }: { children: string }) {
   return (
-    <p className={`gl-cambio mt-1 hidden text-sm group-has-[#periodo-anual:checked]:block ${className}`}>{children}</p>
+    <p className="gl-cambio mt-1 hidden text-slate-500 text-sm group-has-[#periodo-anual:checked]:block">{children}</p>
+  );
+}
+
+function TarjetaProducto({ producto }: { producto: Producto }) {
+  const { nombre, para, instalacion, plazoMinimo, mensual, anual, totalAnual, funciones, extra, cta } = producto;
+  return (
+    <div className="gl-revelar flex flex-col rounded-2xl border border-slate-200 bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <h3 className="font-bold text-2xl text-[#404a9d]">{nombre}</h3>
+      <p className="mt-2 min-h-[3rem] text-slate-600 text-sm">{para}</p>
+
+      <div className="mt-6 border-slate-100 border-b pb-5">
+        <div className="font-extrabold text-4xl text-[#5a67c5]">
+          <Precio mensual={mensual} anual={anual} /> <span className="font-normal text-lg">/mes</span>
+        </div>
+        <DetalleAnual>{totalAnual}</DetalleAnual>
+        <p className="mt-2 font-semibold text-slate-500 text-sm">
+          Instalación: {instalacion === "$0" ? "gratis" : `${instalacion} MXN`}
+        </p>
+        {plazoMinimo && <p className="text-slate-500 text-xs">Plazo mínimo: {plazoMinimo} meses</p>}
+      </div>
+
+      <ul className="mt-5 flex-grow space-y-3">
+        {funciones.map((item) => (
+          <li key={item} className="flex items-start text-sm">
+            <CheckIcon className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#7686f0]" />
+            <span className="ml-3 text-slate-700">{item}</span>
+          </li>
+        ))}
+      </ul>
+
+      <p className="mt-5 font-semibold text-[#5a67c5] text-sm">{extra}</p>
+
+      <a
+        href={cta.href}
+        {...(cta.externo ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        className="mt-5 block w-full rounded-xl bg-[#5a67c5] py-3 text-center font-bold text-white shadow-md transition hover:bg-[#404a9d]"
+      >
+        {cta.texto}
+      </a>
+    </div>
   );
 }
 
 export default function PricingSection() {
   return (
-    <section id="precios" className="group py-20 bg-[#b5c4fb]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="gl-revelar text-center mb-10">
-          <h2 className="text-3xl font-bold sm:text-4xl text-[#404a9d]">Planes y Precios</h2>
-          <p className="mt-4 text-lg text-[#1e293b]">
-            Inversión tecnológica que se paga sola. Elige el modelo que mejor se adapte a tu empresa. <br />
-            <span className="text-sm font-semibold text-[#404a9d]">
+    <section id="precios" className="group bg-[#b5c4fb] py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="gl-revelar mb-10 text-center">
+          <h2 className="font-bold text-3xl text-[#404a9d] sm:text-4xl">¿Qué necesita tu negocio?</h2>
+          <p className="mt-4 text-[#1e293b] text-lg">
+            Elige tu sistema: instalación gratis, y Membresías y Citas incluyen tu página web.
+            <br />
+            <span className="font-semibold text-[#404a9d] text-sm">
               Precios en MXN con IVA incluido, excepto el plan A la Medida (+ IVA).
             </span>
           </p>
         </div>
 
-        <fieldset className="gl-revelar mx-auto mb-16 flex w-fit items-center gap-1 rounded-full bg-white/60 p-1 shadow-sm">
+        <fieldset className="gl-revelar mx-auto mb-12 flex w-fit items-center gap-1 rounded-full bg-white/60 p-1 shadow-sm">
           <legend className="sr-only">Periodo de pago</legend>
           <input type="radio" name="periodo" id="periodo-mensual" defaultChecked className="peer/mensual sr-only" />
           <label
@@ -51,162 +186,43 @@ export default function PricingSection() {
             className="flex cursor-pointer items-center gap-2 rounded-full px-5 py-2 font-bold text-[#404a9d] transition peer-checked/anual:bg-[#404a9d] peer-checked/anual:text-white peer-focus-visible/anual:ring-2 peer-focus-visible/anual:ring-[#404a9d] peer-focus-visible/anual:ring-offset-2"
           >
             Anual
-            <span className="rounded-full bg-[#25D366] px-2 py-0.5 text-xs text-white">2 meses gratis</span>
+            <span className="rounded-full bg-[#25D366] px-2 py-0.5 text-white text-xs">2 meses gratis</span>
           </label>
         </fieldset>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-          {/* Plan 1: Página Web */}
-          <div className="gl-revelar bg-white rounded-2xl p-8 border shadow-sm flex flex-col border-slate-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl">
-            <h3 className="text-2xl font-bold mb-2 text-[#5a67c5]">Página Web</h3>
-            <p className="text-slate-600 mb-6 text-sm">
-              Ideal para negocios locales que necesitan aparecer en el mapa y recibir clientes directamente a su
-              celular.
+        <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {PRODUCTOS.map((producto) => (
+            <TarjetaProducto key={producto.nombre} producto={producto} />
+          ))}
+        </div>
+
+        <div className="gl-revelar mt-10 rounded-2xl bg-white/70 p-6 text-center text-[#1e293b]">
+          <p className="font-bold text-[#404a9d] text-lg">¿Necesitas más de uno? Combínalos.</p>
+          <p className="mt-1">
+            Pagas el sistema de mayor precio y cada sistema extra cuesta <strong>+$350/mes</strong>. Ejemplo: un
+            gimnasio que también vende suplementos usa Membresías + Tienda por <strong>$1,250/mes</strong>.
+          </p>
+        </div>
+
+        <div className="gl-revelar mt-6 flex flex-col items-center justify-between gap-6 rounded-2xl bg-[#404a9d] p-8 text-white md:flex-row">
+          <div>
+            <h3 className="font-bold text-2xl">A la Medida</h3>
+            <p className="mt-1 text-[#e2e8f0]">
+              Desarrollo a la medida, varios usuarios con permisos, automatizaciones y soporte prioritario.
             </p>
-
-            <div className="mb-6 pb-6 border-b border-slate-100">
-              <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Inversión Inicial</p>
-              <div className="text-3xl font-extrabold text-slate-900">
-                $2,500 <span className="text-lg text-slate-500 font-normal">MXN</span>
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <p className="text-sm font-semibold uppercase tracking-wider mb-1 text-[#5a67c5]">Suscripción</p>
-              <div className="text-4xl font-extrabold text-[#5a67c5]">
-                <Precio mensual="$400" anual="$333" /> <span className="text-lg font-normal">/mes</span>
-              </div>
-              <DetalleAnual className="text-slate-500">$4,000 al año · ahorras $800</DetalleAnual>
-            </div>
-
-            <ul className="space-y-4 mb-8 flex-grow">
-              {[
-                "Elige un diseño de nuestro catálogo",
-                "Tú editas textos e imágenes desde tu panel, cuando quieras",
-                "Métricas de visitas de tu página",
-                "Hospedaje, dominio y certificado SSL",
-                "Configuración y enlace directo a WhatsApp",
-                "Alta y optimización en Google Maps",
-              ].map((item) => (
-                <li key={item} className="flex items-start text-sm">
-                  <CheckIcon className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#7686f0]" />
-                  <span className="ml-3 text-slate-700">{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <a
-              href="/plantillas"
-              className="mt-auto block w-full text-center font-bold py-4 rounded-xl transition border-2 border-[#b5c4fb] bg-[#f8fafc] text-[#5a67c5] hover:bg-[#b5c4fb] hover:text-[#404a9d] shadow-sm"
-            >
-              Ver Catálogo de Plantillas
-            </a>
-          </div>
-
-          {/* Plan 2: Página + Sistema (Destacado) */}
-          <div className="gl-revelar bg-[#404a9d] rounded-2xl p-8 shadow-2xl relative md:-translate-y-4 flex flex-col border border-[#404a9d] transition duration-300 hover:-translate-y-1 md:hover:-translate-y-5">
-            <div className="absolute top-0 right-0 bg-[#96a8f7] text-white text-xs font-bold px-4 py-1.5 rounded-bl-lg rounded-tr-xl uppercase tracking-wide">
-              Recomendado
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-2">Página + Sistema</h3>
-            <p className="text-[#e2e8f0] mb-6 text-sm">
-              Tu página web más un sistema para administrar tu negocio, sin descapitalizarte. La instalación va por
-              nuestra cuenta.
+            <p className="mt-3 font-semibold text-[#b5c4fb]">
+              Desde $15,000 MXN de desarrollo + desde <Precio mensual="$1,500" anual="$1,250" />
+              /mes, más IVA
             </p>
-
-            <div className="mb-6 pb-6 border-b border-[#5a67c5]">
-              <p className="text-sm font-semibold text-[#b5c4fb] uppercase tracking-wider mb-1">Inversión Inicial</p>
-              <div className="text-3xl font-extrabold text-white">
-                $0 <span className="text-lg text-[#b5c4fb] font-normal">MXN (Instalación Gratis)</span>
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <p className="text-sm font-semibold uppercase tracking-wider mb-1 text-[#96a8f7]">Uso de Plataforma</p>
-              <div className="text-4xl font-extrabold text-white">
-                <Precio mensual="$900" anual="$750" /> <span className="text-lg text-[#e2e8f0] font-normal">/mes</span>
-              </div>
-              <DetalleAnual className="text-[#b5c4fb]">$9,000 al año · ahorras $1,800</DetalleAnual>
-            </div>
-
-            <ul className="space-y-4 mb-8 flex-grow">
-              <li className="flex items-start text-sm font-semibold text-white">
-                <CheckIcon className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#96a8f7]" />
-                <span className="ml-3">Incluye Página Web, además:</span>
-              </li>
-              {[
-                "1 módulo a elegir: Membresías (socios, pagos y vencimientos), Citas (agenda y recordatorios por WhatsApp) o Tienda (punto de venta e inventario).",
-                "Módulos adicionales: +$350 MXN/mes cada uno.",
-                "Tus datos en la nube, desde la computadora o el celular.",
-              ].map((item) => (
-                <li key={item} className="flex items-start text-sm">
-                  <CheckIcon className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#b5c4fb]" />
-                  <span className="ml-3 text-[#f1f5f9]">{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <a
-              href={`https://wa.me/${APP_CONFIG.whatsapp}?text=Hola,%20me%20interesa%20el%20plan%20P%C3%A1gina%20%2B%20Sistema`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-auto block w-full bg-[#96a8f7] text-[#404a9d] text-center font-bold py-3 rounded-xl transition shadow-lg hover:bg-white hover:text-[#404a9d]"
-            >
-              Agendar Demo
-            </a>
           </div>
-
-          {/* Plan 3: A la Medida */}
-          <div className="gl-revelar bg-white rounded-2xl p-8 border shadow-sm flex flex-col border-slate-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl">
-            <h3 className="text-2xl font-bold mb-2 text-[#5a67c5]">A la Medida</h3>
-            <p className="text-slate-600 mb-6 text-sm">
-              Desarrollo a la medida y automatización avanzada para negocios establecidos con necesidades específicas.
-            </p>
-
-            <div className="mb-6 pb-6 border-b border-slate-100">
-              <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Desarrollo a Medida</p>
-              <div className="text-3xl font-extrabold text-slate-900">
-                Desde $15,000 <span className="text-lg text-slate-500 font-normal">MXN + IVA</span>
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <p className="text-sm font-semibold uppercase tracking-wider mb-1 text-[#5a67c5]">
-                Suscripción y Servidores
-              </p>
-              <div className="text-4xl font-extrabold text-[#5a67c5]">
-                <Precio mensual="$1,500+" anual="$1,250+" /> <span className="text-lg font-normal">/mes + IVA</span>
-              </div>
-              <DetalleAnual className="text-slate-500">Desde $15,000 al año + IVA</DetalleAnual>
-            </div>
-
-            <ul className="space-y-4 mb-8 flex-grow">
-              <li className="flex items-start text-sm font-semibold text-slate-900">
-                <CheckIcon className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#7686f0]" />
-                <span className="ml-3">Incluye todo lo anterior, además:</span>
-              </li>
-              {[
-                "Arquitectura de software 100% adaptable a tus procesos",
-                "Múltiples usuarios con diferentes niveles de permisos",
-                "Automatización de flujos de trabajo (Correos/Recordatorios)",
-                "Soporte técnico prioritario y capacitación de personal",
-              ].map((item) => (
-                <li key={item} className="flex items-start text-sm">
-                  <CheckIcon className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#b5c4fb]" />
-                  <span className="ml-3 text-slate-700">{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <a
-              href={`https://wa.me/${APP_CONFIG.whatsapp}?text=Hola,%20necesito%20cotizar%20un%20plan%20A%20la%20Medida`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-auto block w-full text-center font-bold py-3 rounded-xl transition border-2 border-[#5a67c5] bg-white text-[#5a67c5] hover:bg-[#5a67c5] hover:text-white"
-            >
-              Cotizar Proyecto
-            </a>
-          </div>
+          <a
+            href={whatsapp("Hola, necesito cotizar un plan A la Medida")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block shrink-0 rounded-xl bg-[#96a8f7] px-8 py-3 font-bold text-[#404a9d] shadow-lg transition hover:bg-white"
+          >
+            Cotizar proyecto
+          </a>
         </div>
       </div>
     </section>

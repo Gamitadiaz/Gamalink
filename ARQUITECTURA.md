@@ -176,3 +176,32 @@ $900 a ~$1,100–1,200/mes.
    de la pantalla.
 6. **Todos — cobro automático.** Ver "Cobros con Stripe" (fase A para la mensualidad de Gamalink,
    fase B para que los negocios cobren a sus clientes).
+
+## Precios y reglas comerciales
+
+Fuente de verdad para la página de precios (`src/app/(marketing)/components/PricingSection.tsx`) y los
+términos (`src/app/(marketing)/terminos-y-condiciones/page.tsx`). Si cambia algo aquí, cambiar ambos.
+
+| Producto | Instalación | Mensual | Anual (por mes) | Página web | Plazo mínimo |
+|---|---|---|---|---|---|
+| Página Web | $2,500 | $400 | $333 | — | Ninguno |
+| Membresías | $0 | $900 | $750 | Incluida | 6 meses |
+| Citas | $0 | $900 | $750 | Incluida | 6 meses |
+| Tienda | $0 | $500 | $417 | +$350/mes | 3 meses |
+| A la Medida | desde $15,000 + IVA | desde $1,500 + IVA | desde $1,250 + IVA | Incluida | Por contrato |
+
+- **IVA:** todo con IVA incluido, excepto A la Medida (+ IVA).
+- **Pago anual:** 12 meses por el precio de 10. Cubre el plazo mínimo y no es reembolsable una vez iniciado.
+- **Combinaciones:** se cobra completo el sistema de mayor precio y +$350/mes por cada sistema adicional
+  (la Página Web agregada a la Tienda cuenta como adicional). Ej.: Membresías + Tienda = $1,250.
+  Sin esta regla, Tienda ($500) + Membresías (+$350) saldría más barato que Membresías sola.
+- **Plazo mínimo:** solo en los sistemas con instalación gratis. En combinaciones aplica el más largo
+  (si incluye Membresías o Citas, 6 meses). Agregar sistemas durante el plazo no lo reinicia.
+- **Penalización por cancelar antes del plazo:** 50% de las mensualidades que falten, con la mensualidad
+  vigente. Ej.: Membresías cancelada tras el mes 1 → 5 × $900 × 50% = $2,250; Tienda tras el mes 1 →
+  2 × $500 × 50% = $500; Membresías + Tienda tras el mes 1 → 5 × $1,250 × 50% = $3,125.
+- **Reinstalación tras baja:** 50% del costo de instalación original, mínimo $1,500.
+- **Cambios extra:** secciones nuevas en la página desde $300; funciones nuevas a la medida desde $1,000.
+- **Posicionamiento:** $900 es precio de lanzamiento. Subir a ~$1,100–1,200 cuando existan reserva en
+  línea, check-in y recordatorios automáticos (ver Roadmap). La Tienda va más barata porque compite con
+  puntos de venta gratuitos o de bajo costo.
