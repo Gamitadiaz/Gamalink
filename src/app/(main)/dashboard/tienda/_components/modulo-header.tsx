@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { EmpresaOpcion } from "@/lib/empresa-actual";
 
 import {
@@ -15,7 +17,12 @@ const TABS: ModuloTab[] = [
   { key: "ventas", label: "Ventas", href: "/dashboard/tienda/ventas" },
 ];
 
-export function ModuloHeader(props: { empresa: EmpresaOpcion; opciones: EmpresaOpcion[]; actual: string }) {
+export function ModuloHeader(props: {
+  empresa: EmpresaOpcion;
+  opciones: EmpresaOpcion[];
+  actual: string;
+  acciones?: ReactNode;
+}) {
   return <BaseHeader tabs={TABS} titulo="Tiendita" {...props} />;
 }
 

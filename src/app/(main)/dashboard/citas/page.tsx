@@ -20,6 +20,7 @@ import { resolverEmpresa } from "@/lib/empresa-actual";
 import { diaMx, formatoDinero, formatoFecha, hoyMx, inicioDiaMx, sumarDias } from "@/lib/formato";
 import { createSupabaseServerClient } from "@/lib/sb/server";
 
+import { BotonExportar } from "../_components/modulo/acciones";
 import { CitaAcciones, NuevaCitaForm } from "./_components/forms";
 import { conEmpresa, ModuloHeader, SinEmpresa } from "./_components/modulo-header";
 
@@ -97,7 +98,16 @@ export default async function AgendaPage({
 
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
-      <ModuloHeader actual="agenda" empresa={empresa} opciones={opciones} />
+      <ModuloHeader
+        acciones={
+          <BotonExportar href={`/dashboard/citas/exportar?mes=${fecha.slice(0, 7)}&empresa=${empresa.id}`}>
+            Citas del mes
+          </BotonExportar>
+        }
+        actual="agenda"
+        empresa={empresa}
+        opciones={opciones}
+      />
 
       <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border bg-border lg:grid-cols-4">
         {kpis.map((kpi) => (

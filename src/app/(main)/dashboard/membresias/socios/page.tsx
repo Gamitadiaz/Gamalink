@@ -17,6 +17,7 @@ import {
 } from "@/lib/membresias";
 import { createSupabaseServerClient } from "@/lib/sb/server";
 
+import { BotonExportar } from "../../_components/modulo/acciones";
 import { NuevoSocioForm } from "../_components/forms";
 import { conEmpresa, ModuloHeader, SinEmpresa } from "../_components/modulo-header";
 
@@ -76,7 +77,16 @@ export default async function SociosPage({
 
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
-      <ModuloHeader actual="socios" empresa={empresa} opciones={opciones} />
+      <ModuloHeader
+        acciones={
+          <BotonExportar href={`/dashboard/membresias/exportar?tipo=socios&empresa=${empresa.id}`}>
+            Exportar socios
+          </BotonExportar>
+        }
+        actual="socios"
+        empresa={empresa}
+        opciones={opciones}
+      />
 
       {planes.some((plan) => plan.activo) ? (
         <NuevoSocioForm empresaId={empresa.id} planes={planes} />

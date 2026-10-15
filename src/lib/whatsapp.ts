@@ -4,3 +4,8 @@ export function whatsappUrl(telefono: string, mensaje: string) {
   const numero = digitos.length === 10 ? `52${digitos}` : digitos;
   return `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
 }
+
+// Enlace wa.me sin número: WhatsApp pregunta a quién enviarlo.
+export function whatsappTexto(mensaje: string) {
+  return `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
+}

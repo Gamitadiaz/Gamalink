@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import Link from "next/link";
 
 import type { EmpresaOpcion } from "@/lib/empresa-actual";
@@ -15,12 +17,15 @@ export function ModuloHeader({
   actual,
   empresa,
   opciones,
+  acciones,
 }: {
   titulo: string;
   tabs: ModuloTab[];
   actual: string;
   empresa: EmpresaOpcion;
   opciones: EmpresaOpcion[];
+  // Botones a la derecha del título (exportar, corte de caja…).
+  acciones?: ReactNode;
 }) {
   const hrefActual = tabs.find((tab) => tab.key === actual)?.href ?? tabs[0].href;
 
@@ -31,6 +36,7 @@ export function ModuloHeader({
           <h1 className="font-semibold text-2xl">{titulo}</h1>
           <p className="text-muted-foreground">{empresa.nombre}</p>
         </div>
+        {acciones ? <div className="flex flex-wrap items-center gap-2">{acciones}</div> : null}
         {opciones.length > 1 ? (
           <nav aria-label="Empresa" className="flex flex-wrap gap-1.5">
             {opciones.map((opcion) => (

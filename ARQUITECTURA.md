@@ -145,6 +145,8 @@ Objetivo: cobrar las mensualidades con cargo automático a tarjeta en lugar de p
 
 ### Inicio de sesión con Google y SSO
 
+- **Decisión:** Google solo para *entrar*, no para registrarse. El registro abierto sigue apagado: solo
+  entra con Google quien ya fue invitado con ese mismo correo. Los clientes de los clientes no son usuarios.
 - **Google:** proveedor OAuth de Supabase Auth (`signInWithOAuth({ provider: "google" })`). Ojo con
   las invitaciones: el dueño invitado por correo debe poder entrar con Google si es el mismo correo;
   si no, se crearía un usuario nuevo sin empresa. Verificar la vinculación de identidades antes de
@@ -168,12 +170,16 @@ $900 a ~$1,100–1,200/mes.
 2. **Citas — recordatorios automáticos.** Hoy el dueño los manda a mano con un enlace `wa.me`.
    Automatizarlos requiere un envío programado (cron) y un canal: correo (barato) o la API de WhatsApp
    Business (cobra por mensaje → incluir un cupo en el plan y cobrar el excedente).
-3. **Membresías — aviso automático de vencimiento al socio.** Mismo mecanismo que los recordatorios:
+3. **Membresías — aviso automático de vencimiento al socio.** Hoy ya existe el aviso con un clic por
+   WhatsApp en "Para dar seguimiento"; falta que salga solo. Mismo mecanismo que los recordatorios:
    tarea diaria que busca membresías que vencen en N días y avisa al socio (y un resumen al dueño).
-4. **Tienda — ticket de venta y corte de caja.** Ticket imprimible o compartible por WhatsApp al
-   registrar la venta; corte del día con total por método de pago, ventas canceladas y ganancia.
-5. **Todos — exportar a Excel.** Socios, pagos, citas, productos y ventas a `.xlsx`/CSV con los filtros
-   de la pantalla.
+4. ✅ **Tienda — ticket de venta y corte de caja.** Ticket en `/dashboard/tienda/ventas/[ventaId]`
+   (imprimible en impresora de tickets y para enviar por WhatsApp; el punto de venta ofrece "Ver ticket"
+   al cobrar). Corte en `/dashboard/tienda/ventas/corte?fecha=`: total, ventas, ticket promedio,
+   ganancia, por método de pago, canceladas y productos vendidos. Impresión con `<Imprimible>`.
+5. ✅ **Todos — exportar a Excel.** CSV (abre en Excel con acentos) desde
+   `/dashboard/<modulo>/exportar`: socios y pagos, citas del mes, productos y ventas del mes. Usa
+   `resolverEmpresa` para el permiso y pide los datos por páginas (`src/lib/exportar.ts`).
 6. **Todos — cobro automático.** Ver "Cobros con Stripe" (fase A para la mensualidad de Gamalink,
    fase B para que los negocios cobren a sus clientes).
 
@@ -205,3 +211,11 @@ términos (`src/app/(marketing)/terminos-y-condiciones/page.tsx`). Si cambia alg
 - **Posicionamiento:** $900 es precio de lanzamiento. Subir a ~$1,100–1,200 cuando existan reserva en
   línea, check-in y recordatorios automáticos (ver Roadmap). La Tienda va más barata porque compite con
   puntos de venta gratuitos o de bajo costo.
+
+## Correo
+
+- Los dueños entran con su propio correo (o con usuario, `crearDuenoSinCorreo`); no necesitan correo
+  del dominio de Gamalink.
+- Gamalink sí necesita uno: contacto (`hola@gamalink.online` en lugar del Outlook personal de
+  `APP_CONFIG.correo`) y remitente de las invitaciones con SMTP propio en Supabase.
+- Plantillas de correo en español con la marca: `supabase/templates/` (ver `supabase/README.md`).

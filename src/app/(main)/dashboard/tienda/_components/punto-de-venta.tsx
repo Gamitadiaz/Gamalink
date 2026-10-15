@@ -103,6 +103,10 @@ export function PuntoDeVenta({ empresaId, productos }: { empresaId: number; prod
     toast.success(`Venta registrada · ${formatoDinero(total)}`, {
       description: cambio !== null ? `Cambio: ${formatoDinero(cambio)}` : undefined,
       duration: 8000,
+      action: {
+        label: "Ver ticket",
+        onClick: () => router.push(`/dashboard/tienda/ventas/${resultado.ventaId}?empresa=${empresaId}`),
+      },
     });
     setCarrito([]);
     setPagaCon("");

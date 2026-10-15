@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ReceiptText } from "lucide-react";
 import type { Metadata } from "next";
 
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,7 @@ import { formatoDinero, formatoFecha, formatoHora, hoyMx, inicioDiaMx, sumarDias
 import { METODOS_PAGO } from "@/lib/membresias";
 import { createSupabaseServerClient } from "@/lib/sb/server";
 
+import { BotonExportar } from "../../_components/modulo/acciones";
 import { CancelarVentaButton } from "../_components/forms";
 import { conEmpresa, ModuloHeader, SinEmpresa } from "../_components/modulo-header";
 
@@ -58,7 +59,27 @@ export default async function VentasPage({
 
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
-      <ModuloHeader actual="ventas" empresa={empresa} opciones={opciones} />
+      <ModuloHeader
+        acciones={
+          <>
+            <BotonExportar
+              href={`/dashboard/tienda/exportar?tipo=ventas&mes=${fecha.slice(0, 7)}&empresa=${empresa.id}`}
+            >
+              Ventas del mes
+            </BotonExportar>
+            <Link
+              className={buttonVariants({ size: "sm" })}
+              href={conEmpresa(`/dashboard/tienda/ventas/corte?fecha=${fecha}`, empresa.id)}
+            >
+              <ReceiptText data-icon="inline-start" />
+              Corte de caja
+            </Link>
+          </>
+        }
+        actual="ventas"
+        empresa={empresa}
+        opciones={opciones}
+      />
 
       <section className="flex flex-wrap items-center justify-between gap-4 rounded-xl border bg-card p-4">
         <div className="flex items-center gap-2">
@@ -141,11 +162,17 @@ export default async function VentasPage({
                       </li>
                     ))}
                   </ul>
-                  {venta.estado === "completada" ? (
-                    <div className="flex justify-end">
+                  <div className="flex justify-end gap-2">
+                    <Link
+                      className={buttonVariants({ size: "sm", variant: "outline" })}
+                      href={conEmpresa(`/dashboard/tienda/ventas/${venta.id}`, empresa.id)}
+                    >
+                      Ver ticket
+                    </Link>
+                    {venta.estado === "completada" ? (
                       <CancelarVentaButton empresaId={empresa.id} ventaId={venta.id} />
-                    </div>
-                  ) : null}
+                    ) : null}
+                  </div>
                 </div>
               </details>
             </li>

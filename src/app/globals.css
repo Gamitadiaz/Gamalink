@@ -279,21 +279,26 @@ html:has([data-landing-page]) {
   display: none;
 }
 
+/* Impresión de la factura de demo (plantilla): solo cuando está en la página. */
 @media print {
-  @page {
+  [data-print-root] {
+    page: factura;
+  }
+
+  @page factura {
     size: Letter;
     margin: 0;
   }
 
-  html,
-  body {
+  html:has(body > [data-print-root]),
+  body:has(> [data-print-root]) {
     width: 8.5in !important;
     height: 11in !important;
     margin: 0 !important;
     overflow: hidden !important;
   }
 
-  body > *:not([data-print-root]) {
+  body:has(> [data-print-root]) > *:not([data-print-root]) {
     display: none !important;
   }
 
@@ -317,6 +322,27 @@ html:has([data-landing-page]) {
   [data-print-root] [data-print-paper] * {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+  }
+}
+
+/* Tickets y cortes de caja de los módulos (componente <Imprimible>): solo sale ese contenido. */
+@media print {
+  body:has(> [data-imprimir]) > *:not([data-imprimir]) {
+    display: none !important;
+  }
+
+  [data-imprimir] {
+    color: black !important;
+    background: white !important;
+  }
+
+  [data-imprimir="ticket"] {
+    width: 72mm;
+    font-size: 12px;
+  }
+
+  @page {
+    margin: 8mm;
   }
 }
 

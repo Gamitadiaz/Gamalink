@@ -18,6 +18,7 @@ import {
   type Producto,
 } from "@/lib/tienda";
 
+import { BotonExportar } from "../../_components/modulo/acciones";
 import { NuevoProductoForm } from "../_components/forms";
 import { conEmpresa, ModuloHeader, SinEmpresa } from "../_components/modulo-header";
 
@@ -71,7 +72,16 @@ export default async function ProductosPage({
 
   return (
     <main className="flex flex-col gap-6 p-4 md:p-6">
-      <ModuloHeader actual="productos" empresa={empresa} opciones={opciones} />
+      <ModuloHeader
+        acciones={
+          <BotonExportar href={`/dashboard/tienda/exportar?tipo=productos&empresa=${empresa.id}`}>
+            Exportar productos
+          </BotonExportar>
+        }
+        actual="productos"
+        empresa={empresa}
+        opciones={opciones}
+      />
 
       <NuevoProductoForm categorias={categorias} empresaId={empresa.id} />
 
