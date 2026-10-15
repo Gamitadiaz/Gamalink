@@ -10,7 +10,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Planes y precios",
   description:
-    "Página web desde $2,500 MXN, o tu sistema de gestión con instalación gratis desde $890 al mes. Hospedaje, dominio y soporte incluidos.",
+    "Página web editable desde $2,500 MXN, o tu página más un sistema de membresías, citas o tienda con instalación gratis desde $890 al mes. Hospedaje, dominio y soporte incluidos.",
   path: "/precios",
 });
 

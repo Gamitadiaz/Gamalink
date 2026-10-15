@@ -32,7 +32,7 @@ export default function PlantillasIndex() {
           {PLANTILLAS.map((p) => (
             <article
               key={p.slug}
-              className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col transition hover:shadow-xl hover:-translate-y-1"
+              className="gl-revelar bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col transition hover:shadow-xl hover:-translate-y-1"
             >
               <Link href={`/plantillas/${p.slug}`} className="block border-b border-slate-100">
                 <Image

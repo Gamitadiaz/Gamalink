@@ -16,7 +16,7 @@ export const metadata: Metadata = pageMetadata({
 // BORRADOR basado en el "Contrato de prestación de servicios y SLA" (media/). Antes de considerarlo definitivo,
 // pide que lo revise un abogado. Las secciones 6 a 9 no estaban en el contrato y se agregaron como cláusulas generales.
 const RESPONSABLE = "Gamaliel Diaz Alegría";
-const ULTIMA_ACTUALIZACION = "13 de octubre de 2026";
+const ULTIMA_ACTUALIZACION = "15 de octubre de 2026";
 
 function Seccion({ titulo, children }: { titulo: string; children: ReactNode }) {
   return (
@@ -48,9 +48,9 @@ export default function TerminosYCondiciones() {
 
         <Seccion titulo="1. Pagos, entregas y cancelaciones">
           <p>
-            <strong>Pago inicial.</strong> En los planes con costo de instalación (Presencia Digital y Sistema
-            Personalizado), el desarrollo inicia tras el pago de un <strong>anticipo del 50%, no reembolsable</strong>.
-            El 50% restante se paga contra entrega. En el plan Gestión Digital (instalación $0), el desarrollo inicia
+            <strong>Pago inicial.</strong> En los planes con costo de instalación (Página Web y A la
+            Medida), el desarrollo inicia tras el pago de un <strong>anticipo del 50%, no reembolsable</strong>.
+            El 50% restante se paga contra entrega. En el plan Página + Sistema (instalación $0), el desarrollo inicia
             con el pago por adelantado de la primera mensualidad.
           </p>
           <p>
@@ -67,7 +67,7 @@ export default function TerminosYCondiciones() {
             desde el día en que el Cliente entrega todo el material necesario: logotipos, imágenes, textos y precios.
           </p>
           <p>
-            <strong>Plazo mínimo del plan Gestión Digital.</strong> Para conservar la instalación a $0, este plan
+            <strong>Plazo mínimo del plan Página + Sistema.</strong> Para conservar la instalación a $0, este plan
             requiere un compromiso mínimo de <strong>6 meses</strong>. Si el Cliente cancela antes, deberá cubrir una
             tarifa de recuperación de instalación de <strong>$2,500 MXN</strong>. Después del sexto mes, el servicio es
             mes a mes y puede cancelarse sin penalización.
@@ -76,6 +76,10 @@ export default function TerminosYCondiciones() {
 
         <Seccion titulo="2. Mensualidades, suspensión y respaldos">
           <ul className="list-disc space-y-2 pl-6">
+            <li>
+              <strong>Pago anual:</strong> si el Cliente paga 12 mensualidades por adelantado, solo cubre 10. El pago
+              anual no es reembolsable una vez iniciado el periodo.
+            </li>
             <li>
               <strong>Tolerancia:</strong> las mensualidades se pagan cada mes, con 3 días naturales de tolerancia
               después de la fecha de corte.
@@ -100,7 +104,10 @@ export default function TerminosYCondiciones() {
         </Seccion>
 
         <Seccion titulo="3. Mantenimiento incluido y cambios adicionales">
-          <p>La mensualidad incluye la actualización de contenido de la página web (landing page), limitada a:</p>
+          <p>
+            El Cliente puede editar los textos e imágenes de su página web desde su panel, sin límite y sin costo. Si
+            prefiere que Gamalink haga esos cambios por él, la mensualidad incluye:
+          </p>
           <ul className="list-disc space-y-1 pl-6">
             <li>Hasta 2 imágenes y 3 bloques de texto por página.</li>
             <li>Un máximo total de 10 imágenes y 15 bloques de texto al mes en todo el sitio.</li>
@@ -111,7 +118,11 @@ export default function TerminosYCondiciones() {
           </p>
           <ul className="list-disc space-y-1 pl-6">
             <li>Nuevas secciones en la página web: desde $300 MXN.</li>
-            <li>Nuevos módulos o funciones en el panel administrativo: desde $1,000 MXN.</li>
+            <li>
+              Módulos adicionales ya disponibles en la plataforma (Membresías, Citas o Tienda): $350 MXN al mes cada
+              uno, sin costo de instalación.
+            </li>
+            <li>Funciones nuevas desarrolladas a la medida en el panel administrativo: desde $1,000 MXN.</li>
           </ul>
           <p>
             Cualquier cambio que no esté en la cotización inicial se pausa, se cotiza aparte y, si el Cliente lo
@@ -129,11 +140,11 @@ export default function TerminosYCondiciones() {
 
         <Seccion titulo="5. Propiedad del software y dominios">
           <p>
-            <strong>Plan Gestión Digital:</strong> el código, la base de datos y la arquitectura de la plataforma son
+            <strong>Plan Página + Sistema:</strong> el código, la base de datos y la arquitectura de la plataforma son
             propiedad de Gamalink. El Cliente paga una suscripción por la licencia de uso.
           </p>
           <p>
-            <strong>Plan Sistema Personalizado:</strong> el Cliente es dueño de su copia de la plataforma desarrollada a
+            <strong>Plan A la Medida:</strong> el Cliente es dueño de su copia de la plataforma desarrollada a
             la medida, y Gamalink conserva el derecho de reutilizar la tecnología base.
           </p>
           <p>

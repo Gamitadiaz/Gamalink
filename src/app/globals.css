@@ -319,3 +319,52 @@ html:has([data-landing-page]) {
     -webkit-print-color-adjust: exact;
   }
 }
+
+/* Animaciones de las páginas públicas (precios, plantillas). Solo CSS: si el navegador no soporta
+   las animaciones ligadas al scroll, o el usuario pidió reducir el movimiento, todo se ve estático. */
+@keyframes gl-entrar {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+}
+
+@keyframes gl-pulso {
+  0%,
+  70% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Entrada al cargar la página; --gl-retraso escalona elementos. */
+  .gl-entrar {
+    animation: gl-entrar 0.7s ease-out both;
+    animation-delay: var(--gl-retraso, 0ms);
+  }
+
+  /* Aparece al entrar en pantalla con el scroll. */
+  @supports (animation-timeline: view()) {
+    .gl-revelar {
+      animation: gl-entrar linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
+  }
+
+  /* Onda suave alrededor del botón de WhatsApp. */
+  .gl-pulso::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: inherit;
+    z-index: -1;
+    animation: gl-pulso 3s ease-out infinite;
+  }
+}

@@ -93,3 +93,34 @@ Mientras se migran quedan cerradas: solo el superadmin puede leerlas.
 - `src/app/tenant/page.tsx` — sirve la landing pública según el dominio.
 - `src/lib/landings/` — modelo y validación del contenido de las landings.
 - Scripts SQL en la raíz (`*.sql`) — se ejecutan a mano en Supabase → SQL Editor.
+
+## Pendiente: salir de Supabase y Vercel a un VPS
+
+Objetivo: dejar de pagar Supabase y Vercel y correr todo en un VPS propio con costo fijo.
+No es solo mover la base de datos: el sistema usa cuatro piezas de Supabase y una de Vercel.
+
+| Pieza | Dónde se usa | Qué hay que resolver |
+|---|---|---|
+| Postgres | Todas las tablas `gl_*`, funciones `.rpc()` (`gl_mi_contexto`, `gl_tienda_registrar_venta`, `gl_agenda_crear_cita`…) | Se migra con `pg_dump`/`pg_restore`; es la parte fácil. |
+| Auth | Login, invitación de dueños (`auth.admin.inviteUserByEmail`), `/auth/set-password`, alta y baja de usuarios en `empresas-actions.ts` | Sin Supabase hay que reemplazarlo (Auth.js, Better Auth…) y reescribir esos flujos, incluido el envío de correos (SMTP propio). |
+| RLS | Las políticas y `gl_is_superadmin()` / acceso por empresa dependen de `auth.uid()`. Siete componentes consultan la BD directo desde el navegador (`src/lib/sb/supabase_config.ts`) confiando en RLS. | Sin Supabase no hay `auth.uid()` ni acceso directo desde el navegador: esas consultas pasan a server actions y el filtro por `empresa_id` se hace en el servidor (o se emula `auth.uid()` con una variable de sesión de Postgres). |
+| Storage | Bucket `gl-landing-images` (editor de landings) | Mover las imágenes a disco o a un S3 compatible (MinIO, Cloudflare R2). |
+| Vercel | Hosting de Next.js y **dominios propios de las landings con SSL automático** (`src/proxy.ts`, `src/app/tenant`) | En el VPS: Next.js en Node o Docker detrás de Caddy con *on-demand TLS* para emitir certificados a cada dominio de cliente. |
+
+### Caminos
+
+1. **Supabase self-hosted en el VPS (Docker) — recomendado como primer paso.** Se conserva Auth, RLS,
+   Storage y el código casi sin cambios; solo cambian las URLs y llaves en las variables de entorno.
+   Deja de pagarse Supabase. Contra: el stack de Supabase pide más RAM (≈4 GB) y hay que mantenerlo actualizado.
+2. **Postgres puro + auth propia.** Más ligero y con control total, pero es una reescritura de auth,
+   permisos y subida de imágenes en ~38 archivos que hoy importan el cliente de Supabase.
+
+Se puede hacer 1 ahora y 2 más adelante, módulo por módulo.
+
+### Antes de migrar
+
+- **Respaldos:** los términos prometen conservar la información hasta 12 meses tras una baja. Configurar
+  `pg_dump` diario fuera del VPS (otro proveedor o bucket) y probar una restauración.
+- **Correo:** las invitaciones salen hoy por el SMTP de Supabase; en el VPS hace falta un SMTP propio
+  (Resend, Amazon SES…).
+- **Monitoreo y actualizaciones** del servidor pasan a ser responsabilidad propia.
