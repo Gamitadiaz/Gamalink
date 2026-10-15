@@ -12,7 +12,7 @@ export type ResolvedThemeMode = "light" | "dark";
 
 export const THEME_PRESET_OPTIONS = [
   {
-    label: "Default",
+    label: "Predeterminado",
     value: "default",
     primary: {
       light: "#5a67c5",

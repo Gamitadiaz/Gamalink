@@ -4,7 +4,6 @@ import { useMemo } from "react";
 
 import Link from "next/link";
 
-import { Command } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
 import {
@@ -49,7 +48,10 @@ export function AppSidebar({ access, user, ...props }: AppSidebarProps) {
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
               <Link prefetch={false} href="/dashboard/default">
-                <Command />
+                {/* Logo de Gamalink, el mismo del favicon y el login. */}
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-[#404a9d] to-[#7686f0] font-bold text-sm text-white">
+                  G
+                </span>
                 <span className="font-semibold text-base">{APP_CONFIG.name}</span>
               </Link>
             </SidebarMenuButton>
