@@ -43,7 +43,7 @@ export default function TerminosYCondiciones() {
           (en adelante, &quot;Gamalink&quot;), presta servicios de páginas web, software y sistemas de gestión a sus
           clientes (en adelante, &quot;el Cliente&quot;). <strong>Realizar el pago inicial</strong> (anticipo o primera
           mensualidad) <strong>significa que el Cliente acepta estos términos.</strong> Los precios publicados incluyen
-          los impuestos aplicables.
+          IVA, excepto los del plan A la Medida, que se indican como &quot;+ IVA&quot; y a los que se suma el IVA vigente.
         </p>
 
         <Seccion titulo="1. Pagos, entregas y cancelaciones">

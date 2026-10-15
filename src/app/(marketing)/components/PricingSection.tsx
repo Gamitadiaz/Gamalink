@@ -2,19 +2,58 @@ import { APP_CONFIG } from "@/config/app-config";
 
 import { CheckIcon } from "./Icons";
 
+// El selector Mensual/Anual es CSS puro: dos radios ocultos y `group-has-[...]` muestran un precio u otro.
+// Al pasar de oculto a visible, .gl-cambio vuelve a correr su animación.
+const MENSUAL_ACTIVO = "group-has-[#periodo-anual:checked]:hidden";
+const ANUAL_ACTIVO = "hidden group-has-[#periodo-anual:checked]:inline-block";
+
+function Precio({ mensual, anual }: { mensual: string; anual: string }) {
+  return (
+    <>
+      <span className={`gl-cambio inline-block ${MENSUAL_ACTIVO}`}>{mensual}</span>
+      <span className={`gl-cambio ${ANUAL_ACTIVO}`}>{anual}</span>
+    </>
+  );
+}
+
+function DetalleAnual({ children, className }: { children: string; className: string }) {
+  return (
+    <p className={`gl-cambio mt-1 hidden text-sm group-has-[#periodo-anual:checked]:block ${className}`}>{children}</p>
+  );
+}
+
 export default function PricingSection() {
   return (
-    <section id="precios" className="py-20 bg-[#b5c4fb]">
+    <section id="precios" className="group py-20 bg-[#b5c4fb]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="gl-revelar text-center mb-16">
+        <div className="gl-revelar text-center mb-10">
           <h2 className="text-3xl font-bold sm:text-4xl text-[#404a9d]">Planes y Precios</h2>
           <p className="mt-4 text-lg text-[#1e293b]">
             Inversión tecnológica que se paga sola. Elige el modelo que mejor se adapte a tu empresa. <br />
             <span className="text-sm font-semibold text-[#404a9d]">
-              Los precios mostrados incluyen impuestos aplicables.
+              Precios en MXN con IVA incluido, excepto el plan A la Medida (+ IVA).
             </span>
           </p>
         </div>
+
+        <fieldset className="gl-revelar mx-auto mb-16 flex w-fit items-center gap-1 rounded-full bg-white/60 p-1 shadow-sm">
+          <legend className="sr-only">Periodo de pago</legend>
+          <input type="radio" name="periodo" id="periodo-mensual" defaultChecked className="peer/mensual sr-only" />
+          <label
+            htmlFor="periodo-mensual"
+            className="cursor-pointer rounded-full px-5 py-2 font-bold text-[#404a9d] transition peer-checked/mensual:bg-[#404a9d] peer-checked/mensual:text-white peer-focus-visible/mensual:ring-2 peer-focus-visible/mensual:ring-[#404a9d] peer-focus-visible/mensual:ring-offset-2"
+          >
+            Mensual
+          </label>
+          <input type="radio" name="periodo" id="periodo-anual" className="peer/anual sr-only" />
+          <label
+            htmlFor="periodo-anual"
+            className="flex cursor-pointer items-center gap-2 rounded-full px-5 py-2 font-bold text-[#404a9d] transition peer-checked/anual:bg-[#404a9d] peer-checked/anual:text-white peer-focus-visible/anual:ring-2 peer-focus-visible/anual:ring-[#404a9d] peer-focus-visible/anual:ring-offset-2"
+          >
+            Anual
+            <span className="rounded-full bg-[#25D366] px-2 py-0.5 text-xs text-white">2 meses gratis</span>
+          </label>
+        </fieldset>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
           {/* Plan 1: Página Web */}
@@ -33,10 +72,11 @@ export default function PricingSection() {
             </div>
 
             <div className="mb-6">
-              <p className="text-sm font-semibold uppercase tracking-wider mb-1 text-[#5a67c5]">Suscripción Mensual</p>
+              <p className="text-sm font-semibold uppercase tracking-wider mb-1 text-[#5a67c5]">Suscripción</p>
               <div className="text-4xl font-extrabold text-[#5a67c5]">
-                $400 <span className="text-lg font-normal">/mes</span>
+                <Precio mensual="$400" anual="$333" /> <span className="text-lg font-normal">/mes</span>
               </div>
+              <DetalleAnual className="text-slate-500">$4,000 al año · ahorras $800</DetalleAnual>
             </div>
 
             <ul className="space-y-4 mb-8 flex-grow">
@@ -47,8 +87,8 @@ export default function PricingSection() {
                 "Hospedaje, dominio y certificado SSL",
                 "Configuración y enlace directo a WhatsApp",
                 "Alta y optimización en Google Maps",
-              ].map((item, i) => (
-                <li key={i} className="flex items-start text-sm">
+              ].map((item) => (
+                <li key={item} className="flex items-start text-sm">
                   <CheckIcon className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#7686f0]" />
                   <span className="ml-3 text-slate-700">{item}</span>
                 </li>
@@ -84,8 +124,9 @@ export default function PricingSection() {
             <div className="mb-6">
               <p className="text-sm font-semibold uppercase tracking-wider mb-1 text-[#96a8f7]">Uso de Plataforma</p>
               <div className="text-4xl font-extrabold text-white">
-                $890 <span className="text-lg text-[#e2e8f0] font-normal">/mes</span>
+                <Precio mensual="$900" anual="$750" /> <span className="text-lg text-[#e2e8f0] font-normal">/mes</span>
               </div>
+              <DetalleAnual className="text-[#b5c4fb]">$9,000 al año · ahorras $1,800</DetalleAnual>
             </div>
 
             <ul className="space-y-4 mb-8 flex-grow">
@@ -97,8 +138,8 @@ export default function PricingSection() {
                 "1 módulo a elegir: Membresías (socios, pagos y vencimientos), Citas (agenda y recordatorios por WhatsApp) o Tienda (punto de venta e inventario).",
                 "Módulos adicionales: +$350 MXN/mes cada uno.",
                 "Tus datos en la nube, desde la computadora o el celular.",
-              ].map((item, i) => (
-                <li key={i} className="flex items-start text-sm">
+              ].map((item) => (
+                <li key={item} className="flex items-start text-sm">
                   <CheckIcon className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#b5c4fb]" />
                   <span className="ml-3 text-[#f1f5f9]">{item}</span>
                 </li>
@@ -125,7 +166,7 @@ export default function PricingSection() {
             <div className="mb-6 pb-6 border-b border-slate-100">
               <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Desarrollo a Medida</p>
               <div className="text-3xl font-extrabold text-slate-900">
-                Desde $15,000 <span className="text-lg text-slate-500 font-normal">MXN</span>
+                Desde $15,000 <span className="text-lg text-slate-500 font-normal">MXN + IVA</span>
               </div>
             </div>
 
@@ -134,8 +175,9 @@ export default function PricingSection() {
                 Suscripción y Servidores
               </p>
               <div className="text-4xl font-extrabold text-[#5a67c5]">
-                $1,500+ <span className="text-lg font-normal">/mes</span>
+                <Precio mensual="$1,500+" anual="$1,250+" /> <span className="text-lg font-normal">/mes + IVA</span>
               </div>
+              <DetalleAnual className="text-slate-500">Desde $15,000 al año + IVA</DetalleAnual>
             </div>
 
             <ul className="space-y-4 mb-8 flex-grow">
@@ -148,8 +190,8 @@ export default function PricingSection() {
                 "Múltiples usuarios con diferentes niveles de permisos",
                 "Automatización de flujos de trabajo (Correos/Recordatorios)",
                 "Soporte técnico prioritario y capacitación de personal",
-              ].map((item, i) => (
-                <li key={i} className="flex items-start text-sm">
+              ].map((item) => (
+                <li key={item} className="flex items-start text-sm">
                   <CheckIcon className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#b5c4fb]" />
                   <span className="ml-3 text-slate-700">{item}</span>
                 </li>
@@ -166,11 +208,6 @@ export default function PricingSection() {
             </a>
           </div>
         </div>
-
-        <p className="gl-revelar mt-12 text-center text-[#1e293b]">
-          <span className="font-bold text-[#404a9d]">Pago anual:</span> paga 12 meses por adelantado y llévate 2
-          gratis, en cualquier plan.
-        </p>
       </div>
     </section>
   );

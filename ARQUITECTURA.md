@@ -124,3 +124,55 @@ Se puede hacer 1 ahora y 2 más adelante, módulo por módulo.
 - **Correo:** las invitaciones salen hoy por el SMTP de Supabase; en el VPS hace falta un SMTP propio
   (Resend, Amazon SES…).
 - **Monitoreo y actualizaciones** del servidor pasan a ser responsabilidad propia.
+
+## Roadmap
+
+### Cobros con Stripe (pagos domiciliados)
+
+Objetivo: cobrar las mensualidades con cargo automático a tarjeta en lugar de perseguir transferencias.
+
+- **Fase A — Gamalink cobra a sus clientes.** Stripe Billing con suscripciones por empresa: un
+  `Customer` por `gl_empresas` y un `Price` por servicio de `gl_empresa_servicios` (mensual y anual).
+  Webhooks (`invoice.paid`, `invoice.payment_failed`, `customer.subscription.deleted`) actualizan
+  `gl_cobros` y el estado del servicio; la suspensión al 4.º día de atraso de los términos se vuelve
+  automática. `gda_clientes` ya tenía columnas de Stripe: revisarlas al migrar a `gl_empresas`.
+- **Fase B — los clientes cobran a sus socios** (membresías del gym, anticipos de citas, ventas de la
+  tiendita). Requiere Stripe Connect (cuentas conectadas por empresa) y es otro producto: valorar
+  cobrar comisión o subir el precio del módulo.
+- Pendientes: los pagos en OXXO no sirven para domiciliar (son pago único); confirmar qué métodos
+  recurrentes acepta Stripe en México al momento de implementarlo. Las llaves y el secreto del webhook
+  van en variables de entorno, nunca en el código.
+
+### Inicio de sesión con Google y SSO
+
+- **Google:** proveedor OAuth de Supabase Auth (`signInWithOAuth({ provider: "google" })`). Ojo con
+  las invitaciones: el dueño invitado por correo debe poder entrar con Google si es el mismo correo;
+  si no, se crearía un usuario nuevo sin empresa. Verificar la vinculación de identidades antes de
+  publicarlo.
+- **SSO empresarial (SAML/Microsoft Entra/Google Workspace):** solo tiene sentido para clientes del
+  plan A la Medida con varios usuarios. En Supabase Cloud el SSO por SAML es de planes de pago, lo que
+  choca con la migración a VPS: decidir el proveedor de auth (ver "Pendiente: salir de Supabase y
+  Vercel") antes de construirlo.
+
+### Funciones que sostienen el precio
+
+Comparado con la competencia (software de gym y agendas de $400 a $2,000 MXN/mes), estas funciones
+son las que los clientes esperan. Con las tres primeras listas, el plan Página + Sistema puede subir de
+$900 a ~$1,100–1,200/mes.
+
+1. **Citas — reserva en línea desde la landing.** Hoy solo el dueño agenda. Bloque "Agenda tu cita" en
+   la landing pública que use `horariosDisponibles` y cree la cita sin login. Como la landing es
+   pública, la cita debe crearse con una función de la BD acotada (solo inserta en esa empresa, valida
+   horario y capacidad) y con freno de abuso (captcha o límite por teléfono/IP). Ojo: la función
+   `gl_agenda_crear_cita` vive en Supabase y no está en los `.sql` del repo; revisarla y versionarla.
+2. **Citas — recordatorios automáticos.** Hoy el dueño los manda a mano con un enlace `wa.me`.
+   Automatizarlos requiere un envío programado (cron) y un canal: correo (barato) o la API de WhatsApp
+   Business (cobra por mensaje → incluir un cupo en el plan y cobrar el excedente).
+3. **Membresías — aviso automático de vencimiento al socio.** Mismo mecanismo que los recordatorios:
+   tarea diaria que busca membresías que vencen en N días y avisa al socio (y un resumen al dueño).
+4. **Tienda — ticket de venta y corte de caja.** Ticket imprimible o compartible por WhatsApp al
+   registrar la venta; corte del día con total por método de pago, ventas canceladas y ganancia.
+5. **Todos — exportar a Excel.** Socios, pagos, citas, productos y ventas a `.xlsx`/CSV con los filtros
+   de la pantalla.
+6. **Todos — cobro automático.** Ver "Cobros con Stripe" (fase A para la mensualidad de Gamalink,
+   fase B para que los negocios cobren a sus clientes).

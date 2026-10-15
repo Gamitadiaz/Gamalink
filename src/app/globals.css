@@ -348,6 +348,11 @@ html:has([data-landing-page]) {
     animation-delay: var(--gl-retraso, 0ms);
   }
 
+  /* Precio que cambia con el selector Mensual/Anual. */
+  .gl-cambio {
+    animation: gl-entrar 0.35s ease-out both;
+  }
+
   /* Aparece al entrar en pantalla con el scroll. */
   @supports (animation-timeline: view()) {
     .gl-revelar {

@@ -41,7 +41,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-slate-800 text-center flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
         <p>© {new Date().getFullYear()} Gamalink. Todos los derechos reservados.</p>
         <p className="flex flex-wrap justify-center gap-x-4">
-          <span>Los precios mostrados incluyen impuestos aplicables.</span>
+          <span>Precios con IVA incluido, excepto el plan A la Medida (+ IVA).</span>
           <a className="hover:text-white" href="/terminos-y-condiciones">
             Términos y condiciones
           </a>
