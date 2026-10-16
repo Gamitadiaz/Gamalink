@@ -16,7 +16,7 @@ export const metadata: Metadata = pageMetadata({
 // BORRADOR basado en el "Contrato de prestación de servicios y SLA" (media/). Antes de considerarlo definitivo,
 // pide que lo revise un abogado. Las secciones 6 a 9 no estaban en el contrato y se agregaron como cláusulas generales.
 const RESPONSABLE = "Gamaliel Diaz Alegría";
-const ULTIMA_ACTUALIZACION = "15 de octubre de 2026";
+const ULTIMA_ACTUALIZACION = "16 de octubre de 2026";
 
 function Seccion({ titulo, children }: { titulo: string; children: ReactNode }) {
   return (
@@ -166,9 +166,13 @@ export default function TerminosYCondiciones() {
           </p>
           <p>
             <strong>Dominios:</strong> los planes incluyen el registro de dominios <strong>.com</strong> o{" "}
-            <strong>.com.mx</strong>; otras terminaciones se cotizan aparte. Durante la vigencia del servicio, el
-            dominio se registra y administra a nombre de Gamalink. Si el Cliente cancela y está al corriente en sus
-            pagos, puede solicitar que el dominio se transfiera a su nombre cubriendo una tarifa de $500 MXN.
+            <strong>.com.mx</strong>; otras terminaciones se cotizan aparte. El dominio se registra{" "}
+            <strong>a nombre del Cliente</strong>, como su titular, y Gamalink lo administra (registro, configuración y
+            renovación) mientras el servicio esté vigente; la renovación anual va incluida en la mensualidad. Si el
+            Cliente ya tiene un dominio, lo conserva en su cuenta y solo se configuran los registros necesarios. Si el
+            Cliente cancela y está al corriente en sus pagos, Gamalink le entrega lo necesario para trasladar el dominio
+            a la cuenta que él elija, con una tarifa de $500 MXN por el trámite. Si el servicio se da de baja por falta
+            de pago, Gamalink no está obligado a renovar el dominio después de su fecha de vencimiento.
           </p>
         </Seccion>
 

@@ -156,6 +156,17 @@ Objetivo: cobrar las mensualidades con cargo automático a tarjeta en lugar de p
   choca con la migración a VPS: decidir el proveedor de auth (ver "Pendiente: salir de Supabase y
   Vercel") antes de construirlo.
 
+### Dominios de los clientes
+
+- El dominio se registra con el **cliente como titular**, en la cuenta del registrador de Gamalink
+  (correo de operación, verificación en dos pasos, renovación automática y privacidad WHOIS). Así
+  está en los términos (sección 5). Si el cliente ya tiene dominio, solo agrega los registros DNS.
+- Alta: registrar → agregar dominio en Vercel → DNS (A `76.76.21.21`, CNAME `www` → `cname.vercel-dns.com`)
+  → escribirlo en el editor de la landing (`custom_domain`).
+- Pendiente en el panel: guardar por empresa el dominio, el registrador y la fecha de renovación, con
+  aviso antes de que venza (igual que la cobranza).
+- Pendiente SEO: `/sitemap.xml` en un dominio de cliente devuelve el de Gamalink; generar uno por landing.
+
 ### Plantillas de landing
 
 - Hacer editables los textos fijos de cada plantilla (botones, títulos de sección, mensaje de WhatsApp).
