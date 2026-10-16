@@ -5,14 +5,14 @@ import { useAnalytics } from "@/hooks/use-analytics";
 import type { LandingContentByTemplate } from "@/lib/landings/model";
 
 const DEMO_NEGOCIO: LandingContentByTemplate["dark-purple"] = {
-  nombre: "Pulsar Forge Gym",
+  nombre: "Nova Fitness",
   tipo: "Gimnasio & Fitness",
   slogan: "Forja tu cuerpo",
   subtitulo: "Pesas, cardio y entrenamiento funcional en el mejor ambiente.",
   whatsapp: "524428367627",
-  instagram: "pulsarforgegym",
-  direccion: "Río Nilo 3-Bodega 4, 76922 Arroyo Hondo, Qro.",
-  maps_embed: "https://maps.google.com/maps?q=Arroyo+Hondo+Queretaro&output=embed",
+  instagram: "novafitness",
+  direccion: "Av. Principal 120, Centro, Querétaro, Qro.",
+  maps_embed: "https://maps.google.com/maps?q=Queretaro&output=embed",
   horarios: [
     { dia: "Lunes a Viernes", hora: "6:00 am – 10:30 pm" },
     { dia: "Sábado", hora: "7:00 am – 2:00 pm" },

@@ -5,16 +5,16 @@ import { useAnalytics } from "@/hooks/use-analytics";
 import type { LandingContentByTemplate } from "@/lib/landings/model";
 
 const DEMO_NEGOCIO: LandingContentByTemplate["orange-industrial"] = {
-  nombre: "X GYM Fitness",
+  nombre: "Titanio Gym",
   tipo: "Gimnasio Industrial",
-  ciudad: "Huimilpan, Qro.",
+  ciudad: "Querétaro, Qro.",
   slogan: "Fuerza Bruta.",
   slogan2: "Cero Excusas.",
   descripcion:
     "Equipamiento de alto rendimiento, peso libre y el mejor ambiente de entrenamiento en una nave industrial diseñada para forjar resultados.",
   whatsapp: "524428367627",
-  direccion: "Francisco I. Madero Nte. 186, 76950 Huimilpan, Qro.",
-  maps_embed: "https://maps.google.com/maps?q=Huimilpan+Queretaro&output=embed",
+  direccion: "Calle Industria 45, Centro, Querétaro, Qro.",
+  maps_embed: "https://maps.google.com/maps?q=Queretaro&output=embed",
   horarios: [
     { dia: "Lunes a Viernes", hora: "6:00 am – 10:00 pm" },
     { dia: "Sábado", hora: "7:00 am – 3:00 pm" },
