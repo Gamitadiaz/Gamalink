@@ -10,6 +10,15 @@ import { formatoDinero } from "@/lib/formato";
 export function DineroChart({ data, serie }: { data: { etiqueta: string; valor: number }[]; serie: string }) {
   const chartConfig = { valor: { label: serie, color: "var(--primary)" } } satisfies ChartConfig;
 
+  // Sin movimientos, el eje quedaría en $0–$4 y parecería un error: mejor un aviso.
+  if (data.every((row) => row.valor === 0)) {
+    return (
+      <div className="flex h-56 items-center justify-center rounded-lg border border-dashed text-center text-muted-foreground text-sm">
+        Todavía no hay {serie.toLowerCase()} en este periodo.
+      </div>
+    );
+  }
+
   return (
     <>
       <ChartContainer className="h-56 w-full" config={chartConfig}>

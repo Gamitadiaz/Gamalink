@@ -5,48 +5,64 @@ import { useAnalytics } from "@/hooks/use-analytics";
 import type { LandingContentByTemplate } from "@/lib/landings/model";
 
 const DEMO_NEGOCIO: LandingContentByTemplate["orange-industrial"] = {
-  nombre: "Titanio Gym",
-  tipo: "Gimnasio Industrial",
+  nombre: "Torque Taller Mecánico",
+  tipo: "Taller Mecánico",
   ciudad: "Querétaro, Qro.",
-  slogan: "Fuerza Bruta.",
-  slogan2: "Cero Excusas.",
+  slogan: "Tu auto,",
+  slogan2: "en buenas manos.",
   descripcion:
-    "Equipamiento de alto rendimiento, peso libre y el mejor ambiente de entrenamiento en una nave industrial diseñada para forjar resultados.",
+    "Mecánica general, diagnóstico por computadora, frenos y suspensión. Presupuesto sin compromiso y garantía en cada reparación.",
   whatsapp: "524428367627",
   direccion: "Calle Industria 45, Centro, Querétaro, Qro.",
   maps_embed: "https://maps.google.com/maps?q=Queretaro&output=embed",
   horarios: [
-    { dia: "Lunes a Viernes", hora: "6:00 am – 10:00 pm" },
-    { dia: "Sábado", hora: "7:00 am – 3:00 pm" },
-    { dia: "Domingo", hora: "8:00 am – 1:00 pm" },
+    { dia: "Lunes a Viernes", hora: "8:30 am – 6:30 pm" },
+    { dia: "Sábado", hora: "9:00 am – 2:00 pm" },
+    { dia: "Domingo", hora: "Cerrado" },
   ],
   zonas: [
     {
-      nombre: "Planta Baja",
-      items: [
-        "Amplia zona de peso libre",
-        "Aparatos de placa para hipertrofia",
-        "Estructuras sólidas tipo industrial",
-        "Espacio abierto y ventilado",
-      ],
+      nombre: "Mecánica",
+      items: ["Afinación y cambio de aceite", "Frenos y suspensión", "Clutch y transmisión", "Sistema de enfriamiento"],
     },
     {
-      nombre: "Mezzanine Cardio",
+      nombre: "Diagnóstico",
       items: [
-        "Zona elevada exclusiva para cardio",
-        "Caminadoras y elípticas",
-        "Bicicletas estáticas",
-        "Vista panorámica al área de pesas",
+        "Escáner por computadora",
+        "Revisión eléctrica",
+        "Revisión antes de carretera",
+        "Presupuesto sin compromiso",
       ],
     },
   ],
-  precio_banner: "Pregunta por nuestras membresías accesibles",
-  precio_sub: "Sin inscripciones forzosas · Planes desde $400/mes",
+  precio_banner: "Cotiza tu servicio sin compromiso",
+  precio_sub: "Afinación desde $890 · Garantía en cada reparación",
   imagenes: [],
 };
 
+// Textos fijos de la plantilla. Todavía no son editables (no están en el contenido de la landing, y agregarlos
+// rompería la validación de las landings ya guardadas): las landings reales conservan los de gimnasio y la demo
+// del catálogo usa los de taller.
+const TEXTOS_GIMNASIO = {
+  mensajeWhatsapp: "quiero información sobre membresías",
+  enlaceSeccion: "Instalaciones",
+  botonNav: "Entrena Hoy",
+  tituloSeccion: "Nuestras Zonas",
+  botonPrecios: "Consultar Precios",
+  tituloContacto: "¿Listo para empezar?",
+};
+
+const TEXTOS_TALLER: typeof TEXTOS_GIMNASIO = {
+  mensajeWhatsapp: "quiero cotizar un servicio",
+  enlaceSeccion: "Servicios",
+  botonNav: "Agenda tu servicio",
+  tituloSeccion: "Nuestros Servicios",
+  botonPrecios: "Pedir Cotización",
+  tituloContacto: "¿Tu auto necesita servicio?",
+};
+
 export default function OrangeIndustrialTemplate({
-  business = DEMO_NEGOCIO,
+  business,
   empresaId,
   landingId,
 }: {
@@ -54,9 +70,10 @@ export default function OrangeIndustrialTemplate({
   empresaId?: number;
   landingId?: string;
 } = {}) {
-  const NEGOCIO = business;
+  const NEGOCIO = business ?? DEMO_NEGOCIO;
+  const TEXTOS = business ? TEXTOS_GIMNASIO : TEXTOS_TALLER;
   useAnalytics(empresaId, landingId);
-  const wa = `https://wa.me/${NEGOCIO.whatsapp}?text=Hola%20${encodeURIComponent(NEGOCIO.nombre)},%20quiero%20información%20sobre%20membresías`;
+  const wa = `https://wa.me/${NEGOCIO.whatsapp}?text=${encodeURIComponent(`Hola ${NEGOCIO.nombre}, ${TEXTOS.mensajeWhatsapp}`)}`;
 
   return (
     <div className="bg-zinc-950 text-white font-sans min-h-screen selection:bg-orange-500 selection:text-black">
@@ -72,7 +89,7 @@ export default function OrangeIndustrialTemplate({
           </h1>
           <div className="hidden md:flex space-x-8 text-sm font-bold uppercase tracking-widest text-zinc-400">
             <a href="#instalaciones" className="hover:text-orange-500 transition">
-              Instalaciones
+              {TEXTOS.enlaceSeccion}
             </a>
             <a href="#ubicacion" className="hover:text-orange-500 transition">
               Ubicación
@@ -84,7 +101,7 @@ export default function OrangeIndustrialTemplate({
             rel="noopener noreferrer"
             className="bg-orange-600 text-black px-6 py-2 font-black uppercase italic hover:bg-orange-500 transition transform hover:-skew-x-12"
           >
-            Entrena Hoy
+            {TEXTOS.botonNav}
           </a>
         </div>
       </nav>
@@ -131,7 +148,7 @@ export default function OrangeIndustrialTemplate({
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-4 mb-16">
             <div className="h-1 w-12 bg-orange-600" />
-            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight">Nuestras Zonas</h2>
+            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight">{TEXTOS.tituloSeccion}</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
             {NEGOCIO.zonas.map((zona, zi) => (
@@ -163,7 +180,7 @@ export default function OrangeIndustrialTemplate({
           rel="noopener noreferrer"
           className="mt-6 inline-block bg-black text-white font-black uppercase tracking-widest px-8 py-4 hover:bg-zinc-900 transition text-sm"
         >
-          Consultar Precios
+          {TEXTOS.botonPrecios}
         </a>
       </section>
 
@@ -229,7 +246,7 @@ export default function OrangeIndustrialTemplate({
           {/* Contacto + Mapa */}
           <div className="space-y-6">
             <div className="bg-zinc-900 border border-zinc-800 p-8">
-              <h3 className="text-2xl font-black uppercase mb-4 text-white">¿Listo para empezar?</h3>
+              <h3 className="text-2xl font-black uppercase mb-4 text-white">{TEXTOS.tituloContacto}</h3>
               <p className="text-zinc-400 mb-6">
                 Visítanos directamente o contáctanos por WhatsApp para más información.
               </p>

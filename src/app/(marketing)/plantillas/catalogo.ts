@@ -19,8 +19,8 @@ export const PLANTILLAS: {
   {
     slug: "orange-industrial",
     nombre: "Orange Industrial",
-    ideal: "Gimnasios · Talleres · Autos",
-    desc: "Agresivo e industrial. Naranja sobre negro, tipografía bold. Para negocios que hablan de fuerza.",
+    ideal: "Talleres · Autos · Refaccionarias",
+    desc: "Industrial y directo. Naranja sobre negro, tipografía bold. Para negocios que transmiten fuerza y confianza.",
     acento: "bg-orange-600",
   },
   {

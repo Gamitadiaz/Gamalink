@@ -119,7 +119,7 @@ export default async function MembresiasResumenPage({ searchParams }: { searchPa
         ))}
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-5">
         <section className="space-y-3 rounded-xl border bg-card p-4 md:p-6 xl:col-span-3">
           <div>
             <h2 className="font-semibold text-lg">Ingresos por mes</h2>

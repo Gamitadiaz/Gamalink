@@ -156,6 +156,13 @@ Objetivo: cobrar las mensualidades con cargo automático a tarjeta en lugar de p
   choca con la migración a VPS: decidir el proveedor de auth (ver "Pendiente: salir de Supabase y
   Vercel") antes de construirlo.
 
+### Plantillas de landing
+
+- Hacer editables los textos fijos de cada plantilla (botones, títulos de sección, mensaje de WhatsApp).
+  Hoy Orange Industrial muestra textos de gimnasio en las landings reales y de taller solo en la demo
+  del catálogo. Agregarlos al contenido exige que `isLandingContent` acepte campos opcionales (hoy
+  compara las llaves exactas y las landings guardadas dejarían de validar).
+
 ### Funciones que sostienen el precio
 
 Comparado con la competencia (software de gym y agendas de $400 a $2,000 MXN/mes), estas funciones
