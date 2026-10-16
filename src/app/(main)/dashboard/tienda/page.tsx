@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { resolverEmpresa } from "@/lib/empresa-actual";
-import { diaMx, formatoDinero, hoyMx, inicioDiaMx, sumarDias } from "@/lib/formato";
+import { diaMx, formatoDinero, hoyMx, inicioDiaMx, plural, sumarDias } from "@/lib/formato";
 import { createSupabaseServerClient } from "@/lib/sb/server";
 import {
   ESTADO_STOCK_CLASS,
@@ -97,8 +97,8 @@ export default async function TiendaResumenPage({ searchParams }: { searchParams
     .sort((a, b) => Number(a.stock) - Number(b.stock));
 
   const kpis = [
-    { label: "Vendido hoy", valor: formatoDinero(totalHoy), detalle: `${ventasHoy.length} ventas` },
-    { label: "Vendido en el mes", valor: formatoDinero(totalMes), detalle: `${ventasMes.length} ventas` },
+    { label: "Vendido hoy", valor: formatoDinero(totalHoy), detalle: plural(ventasHoy.length, "venta") },
+    { label: "Vendido en el mes", valor: formatoDinero(totalMes), detalle: plural(ventasMes.length, "venta") },
     {
       label: "Ganancia del mes",
       valor: formatoDinero(ganancia),
@@ -173,7 +173,8 @@ export default async function TiendaResumenPage({ searchParams }: { searchParams
               <li className="flex items-center justify-between gap-2 py-2 text-sm" key={producto.nombre}>
                 <span className="truncate">{producto.nombre}</span>
                 <span className="shrink-0 text-muted-foreground">
-                  {producto.cantidad.toLocaleString("es-MX", { maximumFractionDigits: 3 })} vendidos ·{" "}
+                  {producto.cantidad.toLocaleString("es-MX", { maximumFractionDigits: 3 })}{" "}
+                  {producto.cantidad === 1 ? "vendido" : "vendidos"} ·{" "}
                   <span className="text-foreground tabular-nums">{formatoDinero(producto.total)}</span>
                 </span>
               </li>

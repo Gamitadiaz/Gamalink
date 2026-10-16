@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 
 import { Badge } from "@/components/ui/badge";
 import { resolverEmpresa } from "@/lib/empresa-actual";
-import { diasEntre, formatoDinero, formatoFecha, hoyMx } from "@/lib/formato";
+import { diasEntre, formatoDinero, formatoFecha, hoyMx, plural } from "@/lib/formato";
 import {
   DIAS_AVISO,
   ESTADO_SOCIO_CLASS,
@@ -82,7 +82,7 @@ export default async function MembresiasResumenPage({ searchParams }: { searchPa
     {
       label: "Socios activos",
       valor: String(activos),
-      detalle: `${socios.filter((s) => s.activo).length} registrados`,
+      detalle: plural(socios.filter((s) => s.activo).length, "registrado"),
     },
     { label: "Por vencer", valor: String(cuenta("por_vencer")), detalle: `En los próximos ${DIAS_AVISO} días` },
     { label: "Vencidos", valor: String(cuenta("vencido")), detalle: "Sin renovar" },

@@ -17,7 +17,7 @@ import {
   type ServicioAgenda,
 } from "@/lib/citas";
 import { resolverEmpresa } from "@/lib/empresa-actual";
-import { diaMx, formatoDinero, formatoFecha, hoyMx, inicioDiaMx, sumarDias } from "@/lib/formato";
+import { diaMx, formatoDinero, formatoFecha, hoyMx, inicioDiaMx, plural, sumarDias } from "@/lib/formato";
 import { createSupabaseServerClient } from "@/lib/sb/server";
 
 import { BotonExportar } from "../_components/modulo/acciones";
@@ -79,14 +79,18 @@ export default async function AgendaPage({
     {
       label: fecha === hoy ? "Citas hoy" : `Citas el ${formatoFecha(fecha)}`,
       valor: String(activasDia.length),
-      detalle: `${citasDia.filter((c) => c.estado === "completada").length} atendidas`,
+      detalle: plural(citasDia.filter((c) => c.estado === "completada").length, "atendida"),
     },
     {
       label: "Esta semana",
       valor: String(semana.filter((cita) => cita.estado !== "cancelada").length),
       detalle: "Sin contar canceladas",
     },
-    { label: "Ingresos del mes", valor: formatoDinero(ingresosMes), detalle: `${atendidas.length} citas atendidas` },
+    {
+      label: "Ingresos del mes",
+      valor: formatoDinero(ingresosMes),
+      detalle: plural(atendidas.length, "cita atendida", "citas atendidas"),
+    },
     {
       label: "No asistieron",
       valor: tasaFaltas === null ? "—" : `${tasaFaltas}%`,

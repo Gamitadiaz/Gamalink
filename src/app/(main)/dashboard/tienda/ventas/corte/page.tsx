@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 
 import { buttonVariants } from "@/components/ui/button";
 import { resolverEmpresa } from "@/lib/empresa-actual";
-import { formatoDinero, formatoFecha, formatoHora, hoyMx, inicioDiaMx, sumarDias } from "@/lib/formato";
+import { formatoDinero, formatoFecha, formatoHora, hoyMx, inicioDiaMx, plural, sumarDias } from "@/lib/formato";
 import { METODOS_PAGO } from "@/lib/membresias";
 import { createSupabaseServerClient } from "@/lib/sb/server";
 
@@ -146,7 +146,9 @@ export default async function CortePage({
                   {porMetodo.map((m) => (
                     <tr key={m.label}>
                       <td className="py-1.5">{m.label}</td>
-                      <td className="py-1.5 text-right text-muted-foreground print:text-black">{m.ventas} ventas</td>
+                      <td className="py-1.5 text-right text-muted-foreground print:text-black">
+                        {plural(m.ventas, "venta")}
+                      </td>
                       <td className="py-1.5 text-right font-medium tabular-nums">{formatoDinero(m.total)}</td>
                     </tr>
                   ))}

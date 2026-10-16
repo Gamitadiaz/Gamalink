@@ -51,3 +51,8 @@ export function formatoFecha(fecha: string | null | undefined) {
 export function formatoHora(timestamp: string) {
   return new Date(timestamp).toLocaleTimeString("es-MX", { hour: "numeric", minute: "2-digit", timeZone: ZONA });
 }
+
+// "1 venta", "3 ventas". Para frases que no se forman con "s" se pasa el plural.
+export function plural(cantidad: number, singular: string, enPlural = `${singular}s`) {
+  return `${cantidad.toLocaleString("es-MX")} ${cantidad === 1 ? singular : enPlural}`;
+}

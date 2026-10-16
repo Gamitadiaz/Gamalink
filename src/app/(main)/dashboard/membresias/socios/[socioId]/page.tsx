@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 
 import { Badge } from "@/components/ui/badge";
 import { resolverEmpresa } from "@/lib/empresa-actual";
-import { diasEntre, formatoDinero, formatoFecha, hoyMx } from "@/lib/formato";
+import { diasEntre, formatoDinero, formatoFecha, hoyMx, plural } from "@/lib/formato";
 import {
   ESTADO_SOCIO_CLASS,
   ESTADO_SOCIO_LABEL,
@@ -65,8 +65,8 @@ export default async function SocioPage({
     const dias = diasEntre(hoy, socio.vigente_hasta);
     vigencia =
       dias >= 0
-        ? `Pagado hasta el ${formatoFecha(socio.vigente_hasta)} (${dias === 0 ? "vence hoy" : `${dias} días`}).`
-        : `Venció el ${formatoFecha(socio.vigente_hasta)} (hace ${-dias} días).`;
+        ? `Pagado hasta el ${formatoFecha(socio.vigente_hasta)} (${dias === 0 ? "vence hoy" : plural(dias, "día")}).`
+        : `Venció el ${formatoFecha(socio.vigente_hasta)} (hace ${plural(-dias, "día")}).`;
   }
 
   return (

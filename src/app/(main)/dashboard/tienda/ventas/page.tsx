@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { resolverEmpresa } from "@/lib/empresa-actual";
-import { formatoDinero, formatoFecha, formatoHora, hoyMx, inicioDiaMx, sumarDias } from "@/lib/formato";
+import { formatoDinero, formatoFecha, formatoHora, hoyMx, inicioDiaMx, plural, sumarDias } from "@/lib/formato";
 import { METODOS_PAGO } from "@/lib/membresias";
 import { createSupabaseServerClient } from "@/lib/sb/server";
 
@@ -116,7 +116,7 @@ export default async function VentasPage({
         </div>
         <div className="text-right">
           <p className="text-muted-foreground text-sm">
-            {fecha === hoy ? "Hoy" : formatoFecha(fecha)} · {completadas.length} ventas
+            {fecha === hoy ? "Hoy" : formatoFecha(fecha)} · {plural(completadas.length, "venta")}
           </p>
           <p className="font-semibold text-2xl tabular-nums tracking-tight">{formatoDinero(totalDia)}</p>
           {porMetodo.length > 1 ? (
